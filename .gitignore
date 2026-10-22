@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# UD3.2.a: Entorno virtual local del proyecto.
+piapp-env/
