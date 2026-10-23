@@ -3,7 +3,7 @@
 ## Proyecto
 
 - **Tema:** aplicación web de reservas.
-- **Estado inicial revisado:** repositorio con `README.md` y `LICENSE`; el proyecto Django todavía no está creado.
+- **Estado actual revisado:** entorno virtual preparado y proyecto Django `reservas` creado en la raíz del repositorio.
 - **Forma de trabajo:** implementación guiada paso a paso realizada por el alumno.
 - **Criterio de revisión:** cada tarea solo se marcará como hecha cuando el código y su funcionamiento hayan sido comprobados.
 - **Evidencias:** cuando una tarea requiera capturas, se anotarán aquí y se incorporarán después a la documentación.
@@ -38,14 +38,41 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 
 | Tarea | Requisito | Valor | Estado | Nota | Evidencia y revisión |
 |---|---|---:|---|---:|---|
-| UD3.2.a | Crear el entorno virtual `piapp-env` e instalar Django 5.2. | 1,5 | Necesita corrección | — | Django 5.2.18 está instalado para el usuario, pero `piapp-env` no se creó porque esta instalación no incluye el lanzador `py`. Repetir usando `python -m venv`. |
-| UD3.2.b | Crear un proyecto con un nombre identificable. | 1,5 | Pendiente | — | Revisar la estructura creada. |
-| UD3.2.c | Crear un superusuario. | 1 | Pendiente | — | Comprobar acceso al administrador sin registrar credenciales. |
+| UD3.2.a | Crear el entorno virtual `piapp-env` e instalar Django 5.2. | 1,5 | Hecho | 1,5 | Entorno creado con Python 3.13.14, Django 5.2.18 instalado y directorio `piapp-env/` correctamente ignorado por Git. |
+| UD3.2.b | Crear un proyecto con un nombre identificable. | 1,5 | Hecho | 1,5 | Proyecto `reservas` creado en la raíz. Contiene `manage.py` y el paquete de configuración esperado; `manage.py check` no detecta problemas. |
+| UD3.2.c | Crear un superusuario. | 1 | Hecho | 1 | Migraciones iniciales aplicadas, base de datos `db.sqlite3` creada y acceso al administrador confirmado por el alumno. No se registran credenciales. |
 | UD3.2.d | Ejecutar la recolección de archivos estáticos y comprobar las carpetas. | 1 | Pendiente | — | Revisar salida y directorios generados. |
 | UD3.2.e | Aplicar en `settings.py` y `urls.py` los cambios de los apartados 5.1 y 5.3.3 de la teoría. | 1 | Pendiente | — | Comparar configuración con la guía. |
 | UD3.2.f | Crear y registrar las apps `common`, `core` y `billing`. | 1,5 | Pendiente | — | Revisar apps e `INSTALLED_APPS`. |
 | UD3.2.g | Crear `templates` y configurarla en `settings.py`. | 1 | Pendiente | — | Comprobar búsqueda de plantillas. |
 | UD3.2.h | Preparar el proyecto para ejecutarse con Docker. | 1,5 | Pendiente | — | Revisar archivos y ejecución del contenedor. |
+
+#### Guía técnica del bloque UD3.2
+
+##### UD3.2.a Entorno virtual y Django
+
+- **Dónde está:** `piapp-env/`, en la raíz del repositorio. Está excluido de Git mediante `.gitignore`.
+- **Qué hace:** mantiene aislados Python y los paquetes del proyecto; contiene Django 5.2.18.
+- **Por qué lo hacemos:** evita mezclar dependencias globales con las del proyecto y permite reproducir el entorno.
+- **Sugerencia:** al finalizar este bloque generaremos `requirements.txt` para guardar las versiones necesarias sin subir `piapp-env/`.
+
+##### UD3.2.b Proyecto Django
+
+- **Dónde está:** `manage.py` está en la raíz y la configuración está dentro de `reservas/`.
+- **Qué hace `manage.py`:** ejecuta las órdenes administrativas usando `reservas.settings`.
+- **Qué hace `reservas/settings.py`:** reúne la configuración global: apps, base de datos, idioma, zona horaria, plantillas y estáticos.
+- **Qué hace `reservas/urls.py`:** contiene las rutas principales; actualmente solo publica `/admin/`.
+- **Qué hacen `reservas/asgi.py` y `reservas/wsgi.py`:** permiten que distintos servidores ejecuten la aplicación.
+- **Qué hace `reservas/__init__.py`:** identifica la carpeta como paquete de Python.
+- **Sugerencia:** mantener aquí solo la configuración y desarrollar la funcionalidad en `common`, `core` y `billing`.
+
+##### UD3.2.c Base de datos inicial y superusuario
+
+- **Dónde está:** la base de datos local está en `db.sqlite3`, en la raíz. Este archivo está excluido de Git mediante `.gitignore`.
+- **Qué hace `migrate`:** crea las tablas internas de Django para usuarios, permisos, sesiones y administración.
+- **Qué hace `createsuperuser`:** crea una cuenta con permisos para acceder a `/admin/` y gestionar los datos del proyecto.
+- **Por qué no se sube `db.sqlite3`:** contiene datos locales y puede contener cuentas de usuario; cada entorno debe crear su propia base de datos mediante migraciones.
+- **Sugerencia:** no guardar contraseñas en código, documentación, commits ni capturas.
 
 ### UD3.3 Capa de datos — RA6.b
 
@@ -121,6 +148,9 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 |---|---|---|---|
 | 22/10/2026 | Estado inicial | Proyecto Django aún no iniciado; seguimiento creado. | Comenzar por UD3.1 y UD3.2.a. |
 | 22/10/2026 | UD3.2.a | Django 5.2.18 instalado fuera del entorno virtual; `piapp-env` no existe. | Crear el entorno con `python -m venv piapp-env`, activarlo e instalar Django dentro de él. |
+| 22/10/2026 | UD3.2.a | Corregido y verificado: entorno aislado con Python 3.13.14 y Django 5.2.18; exclusión de Git confirmada. Nota: 1,5/1,5. | Crear el proyecto Django de UD3.2.b. |
+| 22/10/2026 | UD3.2.b | Proyecto `reservas` creado con la estructura correcta y sin incidencias en la comprobación de Django. Nota: 1,5/1,5. | Aplicar las migraciones iniciales y crear el superusuario de UD3.2.c. |
+| 23/10/2026 | UD3.2.c | Base de datos inicial creada y acceso al administrador confirmado. Nota: 1/1. | Configurar y ejecutar la recolección de archivos estáticos de UD3.2.d. |
 
 ## Registro de capturas pendientes
 
