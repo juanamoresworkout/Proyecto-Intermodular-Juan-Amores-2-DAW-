@@ -221,3 +221,9 @@ __marimo__/
 
 # UD3.2.a: Entorno virtual local del proyecto.
 piapp-env/
+
+# UD3.2.e: Carpeta raíz generada por collectstatic según la guía.
+/static/
+
+# UD3.2.e: Archivos multimedia subidos por los usuarios.
+/media/

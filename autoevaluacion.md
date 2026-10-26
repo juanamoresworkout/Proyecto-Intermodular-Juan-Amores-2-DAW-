@@ -41,8 +41,8 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 | UD3.2.a | Crear el entorno virtual `piapp-env` e instalar Django 5.2. | 1,5 | Hecho | 1,5 | Entorno creado con Python 3.13.14, Django 5.2.18 instalado y directorio `piapp-env/` correctamente ignorado por Git. |
 | UD3.2.b | Crear un proyecto con un nombre identificable. | 1,5 | Hecho | 1,5 | Proyecto `reservas` creado en la raíz. Contiene `manage.py` y el paquete de configuración esperado; `manage.py check` no detecta problemas. |
 | UD3.2.c | Crear un superusuario. | 1 | Hecho | 1 | Migraciones iniciales aplicadas, base de datos `db.sqlite3` creada y acceso al administrador confirmado por el alumno. No se registran credenciales. |
-| UD3.2.d | Ejecutar la recolección de archivos estáticos y comprobar las carpetas. | 1 | Pendiente | — | Revisar salida y directorios generados. |
-| UD3.2.e | Aplicar en `settings.py` y `urls.py` los cambios de los apartados 5.1 y 5.3.3 de la teoría. | 1 | Pendiente | — | Comparar configuración con la guía. |
+| UD3.2.d | Ejecutar la recolección de archivos estáticos y comprobar las carpetas. | 1 | Hecho | 1 | `STATIC_ROOT` configurado, `collectstatic` ejecutado y carpeta `staticfiles/admin` verificada. El resultado generado está ignorado por Git. |
+| UD3.2.e | Aplicar en `settings.py` y `urls.py` los cambios de los apartados 5.1 y 5.3.3 de la teoría. | 1 | Hecho | 1 | Idioma, zona horaria, plantillas, estáticos y multimedia configurados; Pillow 13.0.0 instalado, `requirements.txt` generado y `manage.py check` superado. |
 | UD3.2.f | Crear y registrar las apps `common`, `core` y `billing`. | 1,5 | Pendiente | — | Revisar apps e `INSTALLED_APPS`. |
 | UD3.2.g | Crear `templates` y configurarla en `settings.py`. | 1 | Pendiente | — | Comprobar búsqueda de plantillas. |
 | UD3.2.h | Preparar el proyecto para ejecutarse con Docker. | 1,5 | Pendiente | — | Revisar archivos y ejecución del contenedor. |
@@ -73,6 +73,23 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 - **Qué hace `createsuperuser`:** crea una cuenta con permisos para acceder a `/admin/` y gestionar los datos del proyecto.
 - **Por qué no se sube `db.sqlite3`:** contiene datos locales y puede contener cuentas de usuario; cada entorno debe crear su propia base de datos mediante migraciones.
 - **Sugerencia:** no guardar contraseñas en código, documentación, commits ni capturas.
+
+##### UD3.2.d Recolección de archivos estáticos
+
+- **Dónde se configura:** `STATIC_ROOT` está en `reservas/settings.py` y apunta a `static/`, tal como indica la guía.
+- **Dónde se genera:** `static/`, en la raíz; actualmente contiene los recursos del administrador en `static/admin/`.
+- **Qué hace `collectstatic`:** copia en una sola ubicación los CSS, JavaScript, fuentes e imágenes de Django y de las apps para que un servidor pueda publicarlos.
+- **Por qué se ignora:** la carpeta `/static/` de la raíz es un resultado generado que se puede reconstruir ejecutando `python manage.py collectstatic`.
+- **Sugerencia:** versionar los archivos estáticos originales que creemos dentro de cada app, pero no la copia recopilada en la carpeta `/static/` raíz.
+
+##### UD3.2.e Configuración general y multimedia
+
+- **Dónde está:** la configuración se encuentra en `reservas/settings.py` y la publicación de multimedia durante el desarrollo en `reservas/urls.py`.
+- **Qué se configuró:** español, zona horaria de Madrid, carpeta global de plantillas, rutas `/static/` y `/media/`, y sus correspondientes carpetas físicas.
+- **Cómo funciona multimedia:** con `DEBUG=True`, las peticiones que comienzan por `/media/` se resuelven contra `MEDIA_ROOT` mediante las rutas añadidas en `urls.py`.
+- **Dependencia:** Pillow 13.0.0 permite trabajar con `ImageField`; está registrada junto con Django 5.2.18 en `requirements.txt`.
+- **Verificación:** `python manage.py check` finaliza sin errores ni advertencias.
+- **Sugerencia:** en producción, usar variables de entorno para `SECRET_KEY` y `DEBUG`, y servir estáticos y multimedia mediante un servidor o almacenamiento especializado.
 
 ### UD3.3 Capa de datos — RA6.b
 
@@ -151,6 +168,8 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 | 22/10/2026 | UD3.2.a | Corregido y verificado: entorno aislado con Python 3.13.14 y Django 5.2.18; exclusión de Git confirmada. Nota: 1,5/1,5. | Crear el proyecto Django de UD3.2.b. |
 | 22/10/2026 | UD3.2.b | Proyecto `reservas` creado con la estructura correcta y sin incidencias en la comprobación de Django. Nota: 1,5/1,5. | Aplicar las migraciones iniciales y crear el superusuario de UD3.2.c. |
 | 23/10/2026 | UD3.2.c | Base de datos inicial creada y acceso al administrador confirmado. Nota: 1/1. | Configurar y ejecutar la recolección de archivos estáticos de UD3.2.d. |
+| 23/10/2026 | UD3.2.d | `STATIC_ROOT` configurado y contenido recopilado en `static/admin` según la guía. Nota: 1/1. | Aplicar la configuración indicada por la teoría en UD3.2.e. |
+| 26/10/2026 | UD3.2.e | Configuración contrastada con la teoría; Django 5.2.18 y Pillow 13.0.0 verificados; `requirements.txt` reproducible y comprobación del sistema superada. Nota: 1/1. | Crear y registrar las apps `common`, `core` y `billing` de UD3.2.f. |
 
 ## Registro de capturas pendientes
 
