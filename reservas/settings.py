@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # UD3.2.f: Registra las aplicaciones propias del proyecto.
+    'common.apps.CommonConfig',
+    'core.apps.CoreConfig',
+    'billing.apps.BillingConfig',
 ]
 
 MIDDLEWARE = [

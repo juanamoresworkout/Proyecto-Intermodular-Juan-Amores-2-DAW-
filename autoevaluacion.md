@@ -41,10 +41,10 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 | UD3.2.a | Crear el entorno virtual `piapp-env` e instalar Django 5.2. | 1,5 | Hecho | 1,5 | Entorno creado con Python 3.13.14, Django 5.2.18 instalado y directorio `piapp-env/` correctamente ignorado por Git. |
 | UD3.2.b | Crear un proyecto con un nombre identificable. | 1,5 | Hecho | 1,5 | Proyecto `reservas` creado en la raíz. Contiene `manage.py` y el paquete de configuración esperado; `manage.py check` no detecta problemas. |
 | UD3.2.c | Crear un superusuario. | 1 | Hecho | 1 | Migraciones iniciales aplicadas, base de datos `db.sqlite3` creada y acceso al administrador confirmado por el alumno. No se registran credenciales. |
-| UD3.2.d | Ejecutar la recolección de archivos estáticos y comprobar las carpetas. | 1 | Hecho | 1 | `STATIC_ROOT` configurado, `collectstatic` ejecutado y carpeta `staticfiles/admin` verificada. El resultado generado está ignorado por Git. |
+| UD3.2.d | Ejecutar la recolección de archivos estáticos y comprobar las carpetas. | 1 | Hecho | 1 | `STATIC_ROOT` configurado según la guía, `collectstatic` ejecutado y carpeta `static/admin` verificada. El resultado generado está ignorado por Git. |
 | UD3.2.e | Aplicar en `settings.py` y `urls.py` los cambios de los apartados 5.1 y 5.3.3 de la teoría. | 1 | Hecho | 1 | Idioma, zona horaria, plantillas, estáticos y multimedia configurados; Pillow 13.0.0 instalado, `requirements.txt` generado y `manage.py check` superado. |
-| UD3.2.f | Crear y registrar las apps `common`, `core` y `billing`. | 1,5 | Pendiente | — | Revisar apps e `INSTALLED_APPS`. |
-| UD3.2.g | Crear `templates` y configurarla en `settings.py`. | 1 | Pendiente | — | Comprobar búsqueda de plantillas. |
+| UD3.2.f | Crear y registrar las apps `common`, `core` y `billing`. | 1,5 | Hecho | 1,5 | Las tres apps tienen la estructura estándar, están registradas mediante sus clases `AppConfig` y `manage.py check` no detecta problemas. |
+| UD3.2.g | Crear `templates` y configurarla en `settings.py`. | 1 | Hecho | 1 | Carpeta global creada, configurada en `TEMPLATES['DIRS']` y 15 plantillas base cargadas correctamente por el motor de Django. Su adaptación funcional queda pendiente para UD3.7 y UD3.8. |
 | UD3.2.h | Preparar el proyecto para ejecutarse con Docker. | 1,5 | Pendiente | — | Revisar archivos y ejecución del contenedor. |
 
 #### Guía técnica del bloque UD3.2
@@ -91,6 +91,25 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 - **Verificación:** `python manage.py check` finaliza sin errores ni advertencias.
 - **Sugerencia:** en producción, usar variables de entorno para `SECRET_KEY` y `DEBUG`, y servir estáticos y multimedia mediante un servidor o almacenamiento especializado.
 
+##### UD3.2.f Aplicaciones del proyecto
+
+- **Dónde están:** `common/`, `core/` y `billing/` se encuentran en la raíz, al mismo nivel que `manage.py`.
+- **Dónde se registran:** `reservas/settings.py`, dentro de `INSTALLED_APPS`, mediante `CommonConfig`, `CoreConfig` y `BillingConfig`.
+- **Qué hace `common`:** agrupará utilidades compartidas y contendrá `actividadorm.py` en UD3.6; inicialmente queda sin funcionalidad propia.
+- **Qué hace `core`:** contendrá los cinco modelos y la lógica específica de la aplicación de reservas.
+- **Qué hace `billing`:** contendrá la parte guiada de clientes, facturas y cobros.
+- **Verificación:** Django carga las tres configuraciones sin incidencias en `manage.py check`.
+- **Sugerencia:** mantener cada funcionalidad en la app responsable y evitar convertir `common` en una carpeta de código sin una responsabilidad clara.
+
+##### UD3.2.g Plantillas globales
+
+- **Dónde están:** `templates/common/` contiene las bases y componentes compartidos; las plantillas funcionales se organizarán por app.
+- **Dónde se configura:** `reservas/settings.py`, mediante `TEMPLATES[0]['DIRS']` apuntando a la carpeta global `templates/`.
+- **Qué hace:** permite que Django localice plantillas compartidas y específicas de las apps desde una única raíz.
+- **Verificación:** las 15 plantillas entregadas compilan con el motor de Django y `manage.py check` no detecta incidencias.
+- **Adaptación pendiente:** los seis HTML de Cliente, Factura y Cobro deben ubicarse bajo `templates/billing/`; sus campos, enlaces y contenidos se completarán en UD3.7 y UD3.8.
+- **Sugerencia:** conservar la herencia desde `common/base.html`, corregir el HTML del menú lateral y adaptar los componentes antiguos de Bootstrap cuando se trabajen las vistas.
+
 ### UD3.3 Capa de datos — RA6.b
 
 | Tarea | Requisito | Valor | Estado | Nota | Evidencia y revisión |
@@ -109,6 +128,8 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 | UD3.4.d | Configurar `verbose_name` en las apps. | 0,5 | Pendiente | — | Revisar `apps.py`. |
 | UD3.4.e | Configurar `verbose_name` y `verbose_name_plural` en todos los modelos. | 0,75 | Pendiente | — | Revisar la clase `Meta`. |
 | UD3.4.f | Configurar `ordering` en todos los modelos. | 0,75 | Pendiente | — | Comparar con el anexo II y los criterios propios de `core`. |
+
+> **Aclaración del Anexo II para UD3.4.b:** en `CobroAdmin`, `search_fields` debe buscar por número de factura y por nombre y apellidos del cliente. No debe utilizar un campo `codigo`. Los recorridos ORM se ajustarán al nombre definitivo del campo de factura, por ejemplo `factura__numero`, `factura__cliente__nombre` y `factura__cliente__apellidos`.
 
 ### UD3.5 Introducción de datos — RA6.e
 
@@ -170,6 +191,8 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 | 23/10/2026 | UD3.2.c | Base de datos inicial creada y acceso al administrador confirmado. Nota: 1/1. | Configurar y ejecutar la recolección de archivos estáticos de UD3.2.d. |
 | 23/10/2026 | UD3.2.d | `STATIC_ROOT` configurado y contenido recopilado en `static/admin` según la guía. Nota: 1/1. | Aplicar la configuración indicada por la teoría en UD3.2.e. |
 | 26/10/2026 | UD3.2.e | Configuración contrastada con la teoría; Django 5.2.18 y Pillow 13.0.0 verificados; `requirements.txt` reproducible y comprobación del sistema superada. Nota: 1/1. | Crear y registrar las apps `common`, `core` y `billing` de UD3.2.f. |
+| 26/10/2026 | UD3.2.f | Apps `common`, `core` y `billing` creadas, registradas explícitamente y validadas. Nota: 1,5/1,5. | Crear y comprobar la carpeta global de plantillas de UD3.2.g. |
+| 26/10/2026 | UD3.2.g | Carpeta global configurada y 15 plantillas base compiladas. Nota: 1/1. | Reorganizar y adaptar las plantillas durante UD3.7-UD3.8; preparar Docker en UD3.2.h. |
 
 ## Registro de capturas pendientes
 
