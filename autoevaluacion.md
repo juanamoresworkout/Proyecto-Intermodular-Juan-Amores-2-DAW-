@@ -45,7 +45,7 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 | UD3.2.e | Aplicar en `settings.py` y `urls.py` los cambios de los apartados 5.1 y 5.3.3 de la teoría. | 1 | Hecho | 1 | Idioma, zona horaria, plantillas, estáticos y multimedia configurados; Pillow 13.0.0 instalado, `requirements.txt` generado y `manage.py check` superado. |
 | UD3.2.f | Crear y registrar las apps `common`, `core` y `billing`. | 1,5 | Hecho | 1,5 | Las tres apps tienen la estructura estándar, están registradas mediante sus clases `AppConfig` y `manage.py check` no detecta problemas. |
 | UD3.2.g | Crear `templates` y configurarla en `settings.py`. | 1 | Hecho | 1 | Carpeta global creada, configurada en `TEMPLATES['DIRS']` y 15 plantillas base cargadas correctamente por el motor de Django. Su adaptación funcional queda pendiente para UD3.7 y UD3.8. |
-| UD3.2.h | Preparar el proyecto para ejecutarse con Docker. | 1,5 | Pendiente | — | Revisar archivos y ejecución del contenedor. |
+| UD3.2.h | Preparar el proyecto para ejecutarse con Docker. | 1,5 | Hecho | 1,5 | `Dockerfile`, `.dockerignore` y `compose.yaml` validados; contenedor en ejecución, migraciones aplicadas, puerto 8000 publicado, administrador accesible y comprobación de Django superada. |
 
 #### Guía técnica del bloque UD3.2
 
@@ -109,6 +109,15 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 - **Verificación:** las 15 plantillas entregadas compilan con el motor de Django y `manage.py check` no detecta incidencias.
 - **Adaptación pendiente:** los seis HTML de Cliente, Factura y Cobro deben ubicarse bajo `templates/billing/`; sus campos, enlaces y contenidos se completarán en UD3.7 y UD3.8.
 - **Sugerencia:** conservar la herencia desde `common/base.html`, corregir el HTML del menú lateral y adaptar los componentes antiguos de Bootstrap cuando se trabajen las vistas.
+
+##### UD3.2.h Ejecución con Docker
+
+- **Dónde está:** `Dockerfile`, `.dockerignore` y `compose.yaml` están en la raíz del proyecto.
+- **Qué hace `Dockerfile`:** construye una imagen Linux con Python 3.13, instala `requirements.txt`, copia el proyecto y define el arranque de Django.
+- **Qué hace `.dockerignore`:** excluye del contexto de construcción el entorno virtual, Git, cachés, base de datos local, estáticos recopilados, multimedia y posibles archivos privados.
+- **Qué hace `compose.yaml`:** construye el servicio `web`, aplica migraciones, inicia Django, comparte el proyecto con `/app` y publica el puerto 8000.
+- **Verificación:** contenedor activo, migraciones al día, Django 5.2.18 iniciado en `0.0.0.0:8000`, acceso correcto a `/admin/` y `manage.py check` sin incidencias.
+- **Sugerencia:** esta configuración es de desarrollo; para producción se sustituirá `runserver`, se desactivará `DEBUG` y se externalizarán secretos y almacenamiento.
 
 ### UD3.3 Capa de datos — RA6.b
 
@@ -193,6 +202,7 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 | 26/10/2026 | UD3.2.e | Configuración contrastada con la teoría; Django 5.2.18 y Pillow 13.0.0 verificados; `requirements.txt` reproducible y comprobación del sistema superada. Nota: 1/1. | Crear y registrar las apps `common`, `core` y `billing` de UD3.2.f. |
 | 26/10/2026 | UD3.2.f | Apps `common`, `core` y `billing` creadas, registradas explícitamente y validadas. Nota: 1,5/1,5. | Crear y comprobar la carpeta global de plantillas de UD3.2.g. |
 | 26/10/2026 | UD3.2.g | Carpeta global configurada y 15 plantillas base compiladas. Nota: 1/1. | Reorganizar y adaptar las plantillas durante UD3.7-UD3.8; preparar Docker en UD3.2.h. |
+| 27/10/2026 | UD3.2.h | Imagen y servicio Docker validados; migraciones, servidor, estáticos del administrador y acceso autenticado comprobados. Nota: 1,5/1,5. | Confirmar los archivos Docker en Git y comenzar el diseño de modelos de UD3.3. |
 
 ## Registro de capturas pendientes
 
