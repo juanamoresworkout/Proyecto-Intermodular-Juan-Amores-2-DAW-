@@ -1,0 +1,16 @@
+# UD3.2.h: Configura el servicio de desarrollo de Django con Docker Compose.
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+
+    volumes:
+      - .:/app
+
+    ports:
+      - "8000:8000"
