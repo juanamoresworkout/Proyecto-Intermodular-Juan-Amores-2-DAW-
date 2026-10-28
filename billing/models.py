@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from common.validators import telefono_espanol
 
@@ -18,8 +19,9 @@ class Cliente(models.Model):
     )
     activo = models.BooleanField(default=True)
 
+    # UD3.3.b: Muestra nombre, apellidos y NIF según el anexo I.
     def __str__(self):
-        return f'{self.nombre} {self.apellidos}'
+        return f'{self.nombre} {self.apellidos} ({self.nif})'
 
 # Almacena una factura emitida a un cliente.
 class Factura(models.Model):
@@ -33,15 +35,16 @@ class Factura(models.Model):
         unique=True,
     )
     concepto = models.TextField()
-    fecha = models.DateField()
+    fecha = models.DateField(default=timezone.now)
     total = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
     )
 
+    # UD3.3.b: Muestra el cliente y el número de factura.
     def __str__(self):
-        return f'Factura {self.numero}'
+        return f'{self.cliente} - {self.numero}'
 
 # Almacena un pago recibido para una factura.
 class Cobro(models.Model):
@@ -50,12 +53,13 @@ class Cobro(models.Model):
         on_delete=models.PROTECT,
         related_name='cobros',
     )
-    fecha = models.DateField()
+    fecha = models.DateField(default=timezone.now)
     importe = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
     )
 
+    # UD3.3.b: Muestra el número de factura y el importe cobrado.
     def __str__(self):
-        return f'Cobro de {self.importe} € - Factura {self.factura.numero}'
+        return f'{self.factura.numero} - {self.importe}'
