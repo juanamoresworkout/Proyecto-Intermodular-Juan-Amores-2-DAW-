@@ -1,0 +1,120 @@
+// Esquema inicial del sistema de reservas de peluquería.
+// Las tablas billing_* proceden del anexo; las core_* forman la propuesta de cinco modelos.
+
+Table billing_cliente {
+  id integer [pk, increment]
+  nombre varchar(256) [not null]
+  apellidos varchar(512) [not null]
+  nif varchar(20) [not null, unique]
+  email varchar(254) [not null, unique]
+  telefono varchar(20)
+  activo boolean [not null, default: true]
+}
+
+Table billing_factura {
+  id integer [pk, increment]
+  cliente_id integer [not null]
+  numero varchar(20) [not null, unique]
+  concepto text [not null]
+  fecha date [not null]
+  total decimal(10,2) [not null, default: 0]
+}
+
+Table billing_cobro {
+  id integer [pk, increment]
+  factura_id integer [not null]
+  fecha date [not null]
+  importe decimal(10,2) [not null, default: 0]
+}
+
+Table core_categoria_servicio {
+  id integer [pk, increment]
+  nombre varchar(100) [not null, unique]
+  descripcion varchar(255)
+}
+
+Table core_servicio {
+  id integer [pk, increment]
+  categoria_id integer [not null]
+  nombre varchar(100) [not null]
+  descripcion varchar(255)
+  duracion_minutos integer [not null]
+  precio decimal(10,2) [not null]
+  activo boolean [not null, default: true]
+
+  indexes {
+    (categoria_id, nombre) [unique]
+  }
+}
+
+Table core_peluquero {
+  id integer [pk, increment]
+  nombre varchar(100) [not null]
+  apellidos varchar(200) [not null]
+  email varchar(254) [not null, unique]
+  telefono varchar(20)
+  activo boolean [not null, default: true]
+}
+
+// Tabla intermedia automática del ManyToMany Peluquero.servicios.
+Table core_peluquero_servicios {
+  id integer [pk, increment]
+  peluquero_id integer [not null]
+  servicio_id integer [not null]
+
+  indexes {
+    (peluquero_id, servicio_id) [unique]
+  }
+}
+
+Table core_disponibilidad {
+  id integer [pk, increment]
+  peluquero_id integer [not null]
+  fecha date [not null]
+  hora_inicio time [not null]
+  hora_fin time [not null]
+  activo boolean [not null, default: true]
+
+  indexes {
+    (peluquero_id, fecha, hora_inicio, hora_fin) [unique]
+  }
+}
+
+Table core_reserva {
+  id integer [pk, increment]
+  cliente_id integer
+  disponibilidad_id integer [not null]
+  fecha_inicio datetime [not null]
+  fecha_fin datetime [not null]
+  estado varchar(20) [not null, default: 'confirmada']
+  duracion_total_minutos integer [not null]
+  precio_total decimal(10,2) [not null]
+  fecha_creacion datetime [not null]
+  observaciones text
+}
+
+// Tabla intermedia automática del ManyToMany Reserva.servicios.
+Table core_reserva_servicios {
+  id integer [pk, increment]
+  reserva_id integer [not null]
+  servicio_id integer [not null]
+
+  indexes {
+    (reserva_id, servicio_id) [unique]
+  }
+}
+
+Ref: billing_factura.cliente_id > billing_cliente.id [delete: restrict]
+Ref: billing_cobro.factura_id > billing_factura.id [delete: restrict]
+
+Ref: core_servicio.categoria_id > core_categoria_servicio.id [delete: restrict]
+Ref: core_peluquero_servicios.peluquero_id > core_peluquero.id [delete: cascade]
+Ref: core_peluquero_servicios.servicio_id > core_servicio.id [delete: cascade]
+Ref: core_disponibilidad.peluquero_id > core_peluquero.id [delete: restrict]
+
+// SET NULL conserva la reserva si se elimina físicamente un cliente sin factura.
+// Como billing_factura protege a sus clientes, la política recomendada es la baja lógica.
+Ref: core_reserva.cliente_id > billing_cliente.id [delete: set null]
+Ref: core_reserva.disponibilidad_id > core_disponibilidad.id [delete: restrict]
+Ref: core_reserva_servicios.reserva_id > core_reserva.id [delete: cascade]
+Ref: core_reserva_servicios.servicio_id > core_servicio.id [delete: restrict]
