@@ -16,6 +16,14 @@ class CategoriaServicio(models.Model):
         blank=True,
     )
 
+    class Meta:
+        # UD3.4.e: Nombres del modelo.
+        verbose_name = 'categoría de servicio'
+        verbose_name_plural = 'categorías de servicios'
+
+        # UD3.4.f: Orden alfabético por nombre.
+        ordering = ['nombre']
+
     # UD3.3.b: Muestra la categoría mediante su nombre.
     def __str__(self):
         return self.nombre
@@ -43,6 +51,13 @@ class Servicio(models.Model):
 
     # Impide repetir el nombre de un servicio dentro de la misma categoría.
     class Meta:
+        # UD3.4.e: Nombres singular y plural del modelo.
+        verbose_name = 'servicio'
+        verbose_name_plural = 'servicios'
+
+        # UD3.4.f: Ordena por nombre de categoría y después por servicio.
+        ordering = ['categoria__nombre', 'nombre']
+
         constraints = [
             models.UniqueConstraint(
                 fields=['categoria', 'nombre'],
@@ -72,6 +87,14 @@ class Peluquero(models.Model):
     )
     # Permite ocultar al peluquero de nuevas reservas sin eliminar sus datos.
     activo = models.BooleanField(default=True)
+
+    class Meta:
+        # UD3.4.e: Nombres del modelo.
+        verbose_name = 'peluquero'
+        verbose_name_plural = 'peluqueros'
+
+        # UD3.4.f: Ordena por apellidos y nombre.
+        ordering = ['apellidos', 'nombre']
 
     def __str__(self):
         return f'{self.nombre} {self.apellidos}'
@@ -135,6 +158,13 @@ class HorarioSemanal(models.Model):
 
     # Evita bloques repetidos y exige que la hora final sea posterior a la inicial.
     class Meta:
+        # UD3.4.e: Nombres del modelo.
+        verbose_name = 'horario semanal'
+        verbose_name_plural = 'horarios semanales'
+
+        # UD3.4.f: Agrupa por peluquero, día y hora.
+        ordering = ['peluquero', 'dia_semana', 'hora_inicio']
+
         constraints = [
             models.UniqueConstraint(
                 fields=[
@@ -227,6 +257,13 @@ class ExcepcionHorario(models.Model):
 
     # Solo permite una excepción por peluquero y fecha.
     class Meta:
+        # UD3.4.e: Nombres del modelo.
+        verbose_name = 'excepción de horario'
+        verbose_name_plural = 'excepciones de horario'
+
+        # UD3.4.f: Muestra primero las fechas más recientes.
+        ordering = ['-fecha', 'peluquero']
+
         constraints = [
             models.UniqueConstraint(
                 fields=['peluquero', 'fecha'],
@@ -279,6 +316,14 @@ class Reserva(models.Model):
         default=Estado.PENDIENTE,
     )
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # UD3.4.e: Nombres del modelo.
+        verbose_name = 'reserva'
+        verbose_name_plural = 'reservas'
+
+        # UD3.4.f: Muestra primero las citas más lejanas en el tiempo.
+        ordering = ['-fecha_inicio']
 
     def __str__(self):
         return (

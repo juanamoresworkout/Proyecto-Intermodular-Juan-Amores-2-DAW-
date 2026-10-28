@@ -19,6 +19,13 @@ class Cliente(models.Model):
     )
     activo = models.BooleanField(default=True)
 
+    # UD3.4.e: Define los nombres del modelo en el administrador.
+    class Meta:
+        verbose_name = 'cliente'
+        verbose_name_plural = 'clientes'
+        # UD3.4.f: Ordena por apellidos y, en caso de empate, por nombre.
+        ordering = ['apellidos', 'nombre']
+
     # UD3.3.b: Muestra nombre, apellidos y NIF según el anexo I.
     def __str__(self):
         return f'{self.nombre} {self.apellidos} ({self.nif})'
@@ -42,6 +49,14 @@ class Factura(models.Model):
         default=0,
     )
 
+    class Meta:
+        # UD3.4.e: Nombres singular y plural del modelo.
+        verbose_name = 'factura'
+        verbose_name_plural = 'facturas'
+
+        # UD3.4.f: Ordena por número de factura.
+        ordering = ['numero']
+
     # UD3.3.b: Muestra el cliente y el número de factura.
     def __str__(self):
         return f'{self.cliente} - {self.numero}'
@@ -59,6 +74,14 @@ class Cobro(models.Model):
         decimal_places=2,
         default=0,
     )
+
+    class Meta:
+        # UD3.4.e: Nombres singular y plural del modelo.
+        verbose_name = 'cobro'
+        verbose_name_plural = 'cobros'
+
+        # UD3.4.f: Muestra primero los cobros más recientes.
+        ordering = ['-fecha']
 
     # UD3.3.b: Muestra el número de factura y el importe cobrado.
     def __str__(self):
