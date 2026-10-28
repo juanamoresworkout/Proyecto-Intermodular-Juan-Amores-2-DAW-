@@ -1,4 +1,4 @@
-# Sistema de Reservas
+# Sistema de Reservas para peluqueria.
 
 ## Guía del equipo y arranque local
 Por definir... 
