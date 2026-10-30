@@ -1,5 +1,9 @@
 # Sistema de Reservas
 
+## Gestión del proyecto y anteproyecto
+- [Espacio del proyecto en ClickUp](https://app.clickup.com/1500510000002061/v/l/1ampjurgd0d-372).
+- [Tarea 1: anteproyecto del sistema de reservas para una peluquería](https://app.clickup.com/t/1500510000002061/1ampjurh80m).
+
 ## Guía del equipo y arranque local
 Por definir... 
 
