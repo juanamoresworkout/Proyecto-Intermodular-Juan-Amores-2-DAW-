@@ -58,12 +58,10 @@ class Servicio(models.Model):
         # UD3.4.f: Ordena por nombre de categoría y después por servicio.
         ordering = ['categoria__nombre', 'nombre']
 
-        constraints = [
-            models.UniqueConstraint(
-                fields=['categoria', 'nombre'],
-                name='servicio_categoria_nombre_unico',
-            ),
-        ]
+        # UD3.3.c: Impide repetir un servicio dentro de la misma categoría.
+        unique_together = (
+            ('categoria', 'nombre'),
+        )
 
     def __str__(self):
         return self.nombre
@@ -165,16 +163,13 @@ class HorarioSemanal(models.Model):
         # UD3.4.f: Agrupa por peluquero, día y hora.
         ordering = ['peluquero', 'dia_semana', 'hora_inicio']
 
+        # UD3.3.c: Impide repetir exactamente el mismo bloque semanal.
+        unique_together = (
+            ('peluquero', 'dia_semana', 'hora_inicio', 'hora_fin'),
+        )
+
+        # UD3.3.c: Exige que el bloque termine después de comenzar.
         constraints = [
-            models.UniqueConstraint(
-                fields=[
-                    'peluquero',
-                    'dia_semana',
-                    'hora_inicio',
-                    'hora_fin',
-                ],
-                name='horario_semanal_bloque_unico',
-            ),
             models.CheckConstraint(
                 condition=models.Q(
                     hora_fin__gt=models.F('hora_inicio'),
@@ -185,7 +180,6 @@ class HorarioSemanal(models.Model):
                 ),
             ),
         ]
-
     def __str__(self):
         return (
             f'{self.peluquero} - {self.get_dia_semana_display()} '
@@ -263,13 +257,10 @@ class ExcepcionHorario(models.Model):
 
         # UD3.4.f: Muestra primero las fechas más recientes.
         ordering = ['-fecha', 'peluquero']
-
-        constraints = [
-            models.UniqueConstraint(
-                fields=['peluquero', 'fecha'],
-                name='excepcion_peluquero_fecha_unica',
-            ),
-        ]
+        # UD3.3.c: Solo permite una excepción por peluquero y fecha.
+        unique_together = (
+            ('peluquero', 'fecha'),
+        )
 
     def __str__(self):
         if self.cerrado:
