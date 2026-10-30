@@ -1,4 +1,4 @@
-# Sistema de Reservas
+# Sistema de Reservas para peluqueria.
 
 ## Gestión del proyecto y anteproyecto
 - [Espacio del proyecto en ClickUp](https://app.clickup.com/1500510000002061/v/l/1ampjurgd0d-372).
