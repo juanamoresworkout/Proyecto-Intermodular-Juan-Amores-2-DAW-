@@ -1,0 +1,16 @@
+{% extends "common/base_intranet.html" %}
+{% block main_content %}
+<div class="container">
+    <h1>Detalle del horario semanal</h1>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ horario_semanal.peluquero }}</h5>
+            <p><strong>Día:</strong> {{ horario_semanal.get_dia_semana_display }}</p>
+            <p><strong>Hora de inicio:</strong> {{ horario_semanal.hora_inicio|time:"H:i" }}</p>
+            <p><strong>Hora de fin:</strong> {{ horario_semanal.hora_fin|time:"H:i" }}</p>
+            <p><strong>Estado:</strong> {{ horario_semanal.activo|yesno:"Activo,Inactivo" }}</p>
+            <a href="{% url 'horario_semanal_list' %}" class="btn btn-secondary">Volver al listado</a>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

@@ -3,59 +3,57 @@
 {% block main_content %}
 <div class="container">
     <h1 class="mb-5">Panel inicial</h1>
-    <h3>Datos maestros</h3>
-    <hr>
-    <div class = "row justify-content-evenly mb-5">
-        <div class="card col-sm-2" >
-          <div class="card-body">
-            <h5 class="card-title">[Tu app]</h5>
-            <p class="card-text">[Tu app]</p>
-            <a href="#" class="btn btn-primary">Consultar</a>
-          </div>
-        </div>
-        <div class="card col-sm-2" >
-          <div class="card-body">
-            <h5 class="card-title">[Tu app]</h5>
-            <p class="card-text">[Tu app]</p>
-            <a href="#" class="btn btn-primary">Consultar</a>
-          </div>
-        </div>
-        <div class="card col-sm-2" >
-          <div class="card-body">
-            <h5 class="card-title">[Tu app]</h5>
-            <p class="card-text">[Tu app]</p>
-            <a href="#" class="btn btn-primary">Consultar</a>
-          </div>
-        </div>
-    </div>
 
+    <h3>Reservas de peluquería</h3>
+    <hr>
+    <div class="row g-3 mb-5">
+        <div class="col-md-4"><div class="card h-100"><div class="card-body">
+            <h5 class="card-title">Categorías</h5>
+            <p class="card-text">Categorías que agrupan los servicios.</p>
+            <a href="{% url 'categoria_servicio_list' %}" class="btn btn-primary">Consultar</a>
+        </div></div></div>
+        <div class="col-md-4"><div class="card h-100"><div class="card-body">
+            <h5 class="card-title">Servicios</h5>
+            <p class="card-text">Servicios disponibles en la peluquería.</p>
+            <a href="{% url 'servicio_list' %}" class="btn btn-primary">Consultar</a>
+        </div></div></div>
+        <div class="col-md-4"><div class="card h-100"><div class="card-body">
+            <h5 class="card-title">Peluqueros</h5>
+            <p class="card-text">Profesionales y servicios que realizan.</p>
+            <a href="{% url 'peluquero_list' %}" class="btn btn-primary">Consultar</a>
+        </div></div></div>
+        <div class="col-md-4"><div class="card h-100"><div class="card-body">
+            <h5 class="card-title">Horarios semanales</h5>
+            <p class="card-text">Horario habitual de cada peluquero.</p>
+            <a href="{% url 'horario_semanal_list' %}" class="btn btn-primary">Consultar</a>
+        </div></div></div>
+        <div class="col-md-4"><div class="card h-100"><div class="card-body">
+            <h5 class="card-title">Excepciones</h5>
+            <p class="card-text">Cambios de horario para fechas concretas.</p>
+            <a href="{% url 'excepcion_horario_list' %}" class="btn btn-primary">Consultar</a>
+        </div></div></div>
+        <div class="col-md-4"><div class="card h-100"><div class="card-body">
+            <h5 class="card-title">Reservas</h5>
+            <p class="card-text">Citas reservadas por los clientes.</p>
+            <a href="{% url 'reserva_list' %}" class="btn btn-primary">Consultar</a>
+        </div></div></div>
+    </div>
 
     <h3>Facturación</h3>
     <hr>
-    <div class = "row justify-content-evenly">
-        <div class="card col-sm-2" >
-          <div class="card-body">
-            <h5 class="card-title">Clientes</h5>
-            <p class="card-text">Clientes</p>
-            <a href="#" class="btn btn-primary">Consultar</a>
-          </div>
-        </div>
-        <div class="card col-sm-2" >
-          <div class="card-body">
-            <h5 class="card-title">Facturas</h5>
-            <p class="card-text">Facturas</p>
-            <a href="#" class="btn btn-primary">Consultar</a>
-          </div>
-        </div>
-        <div class="card col-sm-2" >
-          <div class="card-body">
-            <h5 class="card-title">Cobros</h5>
-            <p class="card-text">Cobros</p>
-            <a href="#" class="btn btn-primary">Consultar</a>
-          </div>
-        </div>
-
+    <div class="row g-3">
+        <div class="col-md-4"><div class="card h-100"><div class="card-body">
+            <h5 class="card-title">Clientes</h5><p class="card-text">Clientes registrados.</p>
+            <a href="{% url 'cliente_list' %}" class="btn btn-primary">Consultar</a>
+        </div></div></div>
+        <div class="col-md-4"><div class="card h-100"><div class="card-body">
+            <h5 class="card-title">Facturas</h5><p class="card-text">Facturas emitidas.</p>
+            <a href="{% url 'factura_list' %}" class="btn btn-primary">Consultar</a>
+        </div></div></div>
+        <div class="col-md-4"><div class="card h-100"><div class="card-body">
+            <h5 class="card-title">Cobros</h5><p class="card-text">Cobros registrados.</p>
+            <a href="{% url 'cobro_list' %}" class="btn btn-primary">Consultar</a>
+        </div></div></div>
     </div>
-
 </div>
 {% endblock main_content %}

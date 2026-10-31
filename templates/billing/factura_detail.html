@@ -1,11 +1,24 @@
 {% extends "common/base_intranet.html" %}
 
-
 {% block main_content %}
-<h1>Detalle de la factura</h1>
+<div class="container">
+    <h1>Detalle de la factura</h1>
 
-<p>
-    {{object}}
-</p>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                Factura {{ factura.numero }}
+            </h5>
 
+            <p><strong>Cliente:</strong> {{ factura.cliente }}</p>
+            <p><strong>Concepto:</strong> {{ factura.concepto }}</p>
+            <p><strong>Fecha:</strong> {{ factura.fecha|date:"d/m/Y" }}</p>
+            <p><strong>Total:</strong> {{ factura.total }} €</p>
+
+            <a href="{% url 'factura_list' %}" class="btn btn-secondary">
+                Volver al listado
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock main_content %}

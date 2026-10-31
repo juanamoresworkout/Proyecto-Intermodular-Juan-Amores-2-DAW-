@@ -1,0 +1,43 @@
+{# Solo muestra la navegación cuando el listado ocupa más de una página. #}
+{% if is_paginated %}
+
+{# Contenedor accesible de la navegación, con margen superior. #}
+<nav class="mt-3" aria-label="Navegación entre páginas">
+    {# Clases de Bootstrap para mostrar y centrar los controles. #}
+    <ul class="pagination justify-content-center">
+
+        {# Muestra el botón Anterior únicamente si existe una página previa. #}
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a
+                    class="page-link"
+                    href="?page={{ page_obj.previous_page_number }}"
+                >
+                    Anterior
+                </a>
+            </li>
+        {% endif %}
+
+        {# Informa del número de página actual y del total de páginas. #}
+        <li class="page-item active">
+            <span class="page-link">
+                Página {{ page_obj.number }}
+                de {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+
+        {# Muestra el botón Siguiente únicamente si existe otra página. #}
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a
+                    class="page-link"
+                    href="?page={{ page_obj.next_page_number }}"
+                >
+                    Siguiente
+                </a>
+            </li>
+        {% endif %}
+
+    </ul>
+</nav>
+{% endif %}

@@ -145,7 +145,7 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 
 | Tarea | Requisito | Valor | Estado | Nota | Evidencia y revisión |
 |---|---|---:|---|---:|---|
-| UD3.5.a | Introducir datos de prueba desde el administrador y aportar una captura de la lista de cada modelo. | 10 | En proceso | — | Datos introducidos y capturas revisadas de CategoriaServicio, Servicio, Peluquero, HorarioSemanal, Reserva, Cliente y Factura. Faltan las capturas de ExcepcionHorario y Cobro. Al existir seis modelos propios, se conservarán nueve capturas para documentar todos los modelos actuales. |
+| UD3.5.a | Introducir datos de prueba desde el administrador y aportar una captura de la lista de cada modelo. | 10 | Hecho | 10 | Datos y capturas disponibles para los nueve modelos actuales. El alumno entregará juntas las capturas definitivas que desea incorporar al documento Word. |
 
 ### UD3.6 ORM de Django — RA6.c
 
@@ -180,15 +180,15 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 
 | Tarea | Requisito | Valor | Estado | Nota | Evidencia y revisión |
 |---|---|---:|---|---:|---|
-| UD3.7.a | Programar las vistas de `core` y completar la tabla de vistas del anexo III. | 5 | Pendiente | — | Revisar modelo, clase y plantilla asociada. |
-| UD3.7.b | Crear las URLs de `core` y completar la tabla de URLs del anexo III. | 5 | Pendiente | — | Revisar nombres, rutas, vistas y parámetros. |
+| UD3.7.a | Programar las vistas de `core` y completar la tabla de vistas del anexo III. | 5 | Hecho | 5 | Creadas las vistas de lista y detalle para CategoriaServicio, Servicio, Peluquero, HorarioSemanal, ExcepcionHorario y Reserva; se añadieron nombres de contexto explícitos en los modelos compuestos. |
+| UD3.7.b | Crear las URLs de `core` y completar la tabla de URLs del anexo III. | 5 | Hecho | 5 | `core/urls.py` contiene doce rutas de lista y detalle con PK; el proyecto las incorpora bajo el prefijo `/reservas/` y el panel enlaza con los seis listados. |
 
 ### UD3.8 Publicación de los datos — RA6.d
 
 | Tarea | Requisito | Valor | Estado | Nota | Evidencia y revisión |
 |---|---|---:|---|---:|---|
-| UD3.8.a | Crear las plantillas de `core` y completar la tabla de plantillas del anexo III. | 7 | Pendiente | — | Revisar listas y detalles de los cinco modelos. |
-| UD3.8.b | Implementar paginación en las vistas y plantillas de listas de `billing` y `core`. | 3 | Pendiente | — | Comprobar navegación con suficientes registros. |
+| UD3.8.a | Crear las plantillas de `core` y completar la tabla de plantillas del anexo III. | 7 | Hecho | 7 | Creadas doce plantillas de lista y detalle para los seis modelos propios, con navegación, relaciones, estados, horarios y casos sin datos. |
+| UD3.8.b | Implementar paginación en las vistas y plantillas de listas de `billing` y `core`. | 3 | Hecho | 3 | Las nueve `ListView` usan `paginate_by = 5` y reutilizan `common/pagination.html`. La navegación, el panel, el menú lateral, los listados y los detalles han sido comprobados manualmente por el alumno. |
 
 ## Registro de revisiones
 
@@ -206,14 +206,15 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 | 27/10/2026 | UD3.2.h | Imagen y servicio Docker validados; migraciones, servidor, estáticos del administrador y acceso autenticado comprobados. Nota: 1,5/1,5. | Confirmar los archivos Docker en Git y comenzar el diseño de modelos de UD3.3. |
 | 30/10/2026 | UD3.3 | Modelos, representaciones, restricciones `unique_together` y migraciones comprobados. `manage.py check` finaliza sin incidencias. Nota: 10/10. | Conservar en Git las migraciones `core.0003` y `core.0004` como historial del cambio. |
 | 30/10/2026 | UD3.4 | Administradores, nombres visibles y ordenaciones revisados. Nota: 10/10. | Conservar las capturas y completar la tabla propia del anexo II en la documentación final. |
-| 30/10/2026 | UD3.5 | Siete listados del administrador aportados durante la guía. | Añadir las capturas de ExcepcionHorario y Cobro y corregir cualquier dato de reserva incoherente antes de cerrar la evidencia. |
+| 30/10/2026 | UD3.5 | Datos y capturas de los nueve modelos confirmados por el alumno. Nota: 10/10. | Incorporar al Word únicamente las capturas definitivas que entregue el alumno. |
 | 30/10/2026 | UD3.6 | Los 20 métodos ORM están escritos y revisados respecto al anexo IV; operación 17 corregida. | Registrar la ejecución en `manage.py shell` de las operaciones restantes sin repetir innecesariamente las operaciones destructivas. |
+| 31/10/2026 | UD3.7 | Vistas y rutas de lista y detalle terminadas para `billing` y los seis modelos propios de `core`. Nota: 10/10. | Conservar una captura del panel y de la navegación entre lista y detalle para el documento final. |
+| 31/10/2026 | UD3.8 | Plantillas de `core` y paginación común terminadas. Nota: 10/10. | Obtener una captura de la paginación cuando un listado tenga más de cinco registros. |
+| 31/10/2026 | UD3.7-UD3.8 | Comprobación manual final correcta: panel, menú lateral, nueve listados, rutas de detalle y paginación operativos. | Guardar las capturas definitivas para completar el documento de actividades. |
 
 ## Registro de capturas pendientes
 
 | Código | Captura necesaria | Estado | Ubicación final |
 |---|---|---|---|
-| UD3.5.a | Lista de CategoriaServicio, Servicio, Peluquero, HorarioSemanal, Reserva, Cliente y Factura. | Aportadas durante la guía; pendiente incorporarlas al documento final. | Documentación del proyecto, por decidir. |
-| UD3.5.a | Lista de ExcepcionHorario. | Pendiente | Documentación del proyecto, por decidir. |
-| UD3.5.a | Lista de Cobro. | Pendiente | Documentación del proyecto, por decidir. |
+| UD3.5.a | Listas del administrador de los nueve modelos actuales. | Disponibles; pendiente recibir la selección definitiva del alumno. | Documento Word final de actividades. |
 

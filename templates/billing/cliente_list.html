@@ -2,13 +2,23 @@
 
 {% block main_content %}
 <div class="container">
-    <h1>Lista de {{ object.verbose_name_plural }}</h1>
+    <h1>Lista de clientes</h1>
+
     <ul class="list-group mt-3">
-    {% for cliente in object_list %}
-        <a href="{% url 'cliente_detail' pk=cliente.id %}" class="list-group-item list-group-item-action">{{ cliente }}</a>
-    {% empty %}
-        <p>No existen clientes.</p>
-    {% endfor %}
+        {% for cliente in object_list %}
+            <a
+                href="{% url 'cliente_detail' pk=cliente.pk %}"
+                class="list-group-item list-group-item-action"
+            >
+                {{ cliente }}
+            </a>
+        {% empty %}
+            <li class="list-group-item">
+                No existen clientes.
+            </li>
+        {% endfor %}
     </ul>
+
+    {% include "common/pagination.html" %}
 </div>
 {% endblock main_content %}

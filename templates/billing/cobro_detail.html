@@ -1,11 +1,23 @@
 {% extends "common/base_intranet.html" %}
 
-
 {% block main_content %}
-<h1>Detalle del cobro</h1>
+<div class="container">
+    <h1>Detalle del cobro</h1>
 
-<p>
-    {{object}}
-</p>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                Cobro de la factura {{ cobro.factura.numero }}
+            </h5>
 
+            <p><strong>Cliente:</strong> {{ cobro.factura.cliente }}</p>
+            <p><strong>Fecha:</strong> {{ cobro.fecha|date:"d/m/Y" }}</p>
+            <p><strong>Importe:</strong> {{ cobro.importe }} €</p>
+
+            <a href="{% url 'cobro_list' %}" class="btn btn-secondary">
+                Volver al listado
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock main_content %}

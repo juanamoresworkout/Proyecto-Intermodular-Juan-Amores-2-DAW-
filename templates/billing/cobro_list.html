@@ -1,15 +1,26 @@
 {% extends "common/base_intranet.html" %}
 
-
 {% block main_content %}
 <div class="container">
     <h1>Lista de cobros</h1>
+
     <ul class="list-group mt-3">
-    {% for cobro in object_list %}
-        <a href="{% url 'cobro_detail' cobro.id %}" class="list-group-item list-group-item-action">{{ cobro }}</a>
-    {% empty %}
-        <p>No existen cobros.</p>
-    {% endfor %}
+        {% for cobro in object_list %}
+            <a
+                href="{% url 'cobro_detail' pk=cobro.pk %}"
+                class="list-group-item list-group-item-action"
+            >
+                Factura {{ cobro.factura.numero }} —
+                {{ cobro.fecha}} —
+                {{ cobro.importe }} €
+            </a>
+        {% empty %}
+            <li class="list-group-item">
+                No existen cobros.
+            </li>
+        {% endfor %}
     </ul>
+
+    {% include "common/pagination.html" %}
 </div>
 {% endblock main_content %}

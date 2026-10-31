@@ -1,52 +1,62 @@
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-      <div class="position-sticky pt-3">
-        <a href="{% url 'panel' %}" class="nav-link" aria-current="page">
-          <span class="text-secondary fs-4">Panel</span>
-        </a>
-        <hr>
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a href="{% url 'cliente_list' %}" class="nav-link" aria-current="page">
-              <span class="text-secondary">Clientes</span>
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'factura_list' %}" class="nav-link">
-              <span class="text-secondary">Facturas</span>
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'cobro_list' %}" class="nav-link">
-              <span class="text-secondary">Cobros</span>
-            </a>
-          </li>
-          <hr>
-          <li>
-            <a href="#" class="nav-link">
-              <span class="text-secondary">[ENLACE DE TU APP]</span>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="nav-link">
-              <span class="text-secondary">[ENLACE DE TU APP]</span>
-            </a>
-          </li>
-            <a href="#" class="nav-link">
-              <span class="text-secondary">[ENLACE DE TU APP]</span>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="nav-link">
-              <span class="text-secondary">[ENLACE DE TU APP]</span>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="nav-link">
-              <span class="text-secondary">[ENLACE DE TU APP]</span>
-            </a>
-          </li>
-          <hr>
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+  <div class="position-sticky pt-3">
+    <a href="{% url 'panel' %}" class="nav-link" aria-current="page">
+      <span class="text-secondary fs-4">Panel</span>
+    </a>
 
-        </ul>
-      </div>
-    </nav>
+    <hr>
+    <p class="px-3 mb-1 text-secondary fw-bold">Facturación</p>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a href="{% url 'cliente_list' %}" class="nav-link">
+          <span class="text-secondary">Clientes</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'factura_list' %}" class="nav-link">
+          <span class="text-secondary">Facturas</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'cobro_list' %}" class="nav-link">
+          <span class="text-secondary">Cobros</span>
+        </a>
+      </li>
+    </ul>
+
+    <hr>
+    <p class="px-3 mb-1 text-secondary fw-bold">Reservas de peluquería</p>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a href="{% url 'categoria_servicio_list' %}" class="nav-link">
+          <span class="text-secondary">Categorías</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'servicio_list' %}" class="nav-link">
+          <span class="text-secondary">Servicios</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'peluquero_list' %}" class="nav-link">
+          <span class="text-secondary">Peluqueros</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'horario_semanal_list' %}" class="nav-link">
+          <span class="text-secondary">Horarios semanales</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'excepcion_horario_list' %}" class="nav-link">
+          <span class="text-secondary">Excepciones</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'reserva_list' %}" class="nav-link">
+          <span class="text-secondary">Reservas</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

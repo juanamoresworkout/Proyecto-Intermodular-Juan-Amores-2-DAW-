@@ -17,11 +17,19 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from common.views import PanelView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', PanelView.as_view(),name='panel'),
+    # UD3.7.b: Incorpora al proyecto las rutas de facturación y cobros.
+    path('billing/', include('billing.urls')),
+    # UD3.7.b: Incorpora las rutas de la aplicación de reservas.
+    path('reservas/', include('core.urls')),
+
 ]
+
 
 # UD3.2.e: Publica los archivos multimedia durante el desarrollo.
 if settings.DEBUG:

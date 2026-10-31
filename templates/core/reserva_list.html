@@ -1,0 +1,15 @@
+{% extends "common/base_intranet.html" %}
+{% block main_content %}
+<div class="container">
+    <h1>Reservas</h1>
+    <ul class="list-group mt-3">
+        {% for reserva in object_list %}<a href="{% url 'reserva_detail' pk=reserva.pk %}"
+            class="list-group-item list-group-item-action">
+            Reserva {{ reserva.pk }} — {{reserva.fecha_inicio|date:"d/m/Y H:i" }} — {{ reserva.peluquero }} — {{ reserva.get_estado_display }}</a>
+        {% empty %}
+        <li class="list-group-item">No existen reservas.</li>
+        {% endfor %}
+    </ul>
+    {% include "common/pagination.html" %}
+</div>
+{% endblock main_content %}

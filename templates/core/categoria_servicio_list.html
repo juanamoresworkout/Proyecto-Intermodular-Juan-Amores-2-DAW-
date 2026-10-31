@@ -1,0 +1,13 @@
+{% extends "common/base_intranet.html" %}
+{% block main_content %}
+
+<div class="container">
+    <h1>Categorías de servicios</h1>
+    <ul class="list-group mt-3">
+        {% for categoria in object_list %}<a href="{% url 'categoria_servicio_detail' pk=categoria.pk %}"
+            class="list-group-item list-group-item-action">{{ categoria.nombre }}</a>
+        {% empty %}<li class="list-group-item">No existen categorías de servicios.</li>{% endfor %}
+    </ul>
+    {% include "common/pagination.html" %}
+</div>
+{% endblock main_content %}

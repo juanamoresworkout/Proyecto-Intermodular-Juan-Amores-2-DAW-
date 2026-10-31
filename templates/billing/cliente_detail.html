@@ -1,9 +1,32 @@
 {% extends "common/base_intranet.html" %}
 
-
 {% block main_content %}
-<h1>Detalle de cliente</h1>
-<h6>{{object.nombre}}</h6>
+<div class="container">
+    <h1>Detalle del cliente</h1>
 
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                {{ cliente.nombre }} {{ cliente.apellidos }}
+            </h5>
 
+            <p><strong>NIF:</strong> {{ cliente.nif }}</p>
+            <p><strong>Correo:</strong> {{ cliente.email }}</p>
+            <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+
+            <p>
+                <strong>Estado:</strong>
+                {% if cliente.activo %}
+                    Activo
+                {% else %}
+                    Inactivo
+                {% endif %}
+            </p>
+
+            <a href="{% url 'cliente_list' %}" class="btn btn-secondary">
+                Volver al listado
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock main_content %}

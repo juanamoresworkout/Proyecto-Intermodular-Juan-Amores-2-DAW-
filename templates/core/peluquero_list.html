@@ -1,0 +1,12 @@
+{% extends "common/base_intranet.html" %}
+{% block main_content %}
+<div class="container">
+    <h1>Peluqueros</h1>
+    <ul class="list-group mt-3">
+        {% for peluquero in object_list %}<a href="{% url 'peluquero_detail' pk=peluquero.pk %}"
+            class="list-group-item list-group-item-action">{{ peluquero }} — {{ peluquero.email }}</a>
+        {% empty %}<li class="list-group-item">No existen peluqueros.</li>{% endfor %}
+    </ul>
+    {% include "common/pagination.html" %}
+</div>
+{% endblock main_content %}

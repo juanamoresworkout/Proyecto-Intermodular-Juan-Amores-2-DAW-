@@ -1,0 +1,18 @@
+{% extends "common/base_intranet.html" %}
+{% block main_content %}
+<div class="container">
+    <h1>Detalle del peluquero</h1>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ peluquero.nombre }} {{ peluquero.apellidos }}</h5>
+            <p><strong>Correo:</strong> {{ peluquero.email }}</p>
+            <p><strong>Teléfono:</strong> {{ peluquero.telefono|default:"Sin teléfono" }}</p>
+            <p><strong>Estado:</strong> {{ peluquero.activo|yesno:"Activo,Inactivo" }}</p>
+            <p><strong>Servicios:</strong></p>
+            <ul>{% for servicio in peluquero.servicios.all %}<li>{{ servicio.nombre }}</li>{% empty %}<li>No tiene
+                    servicios asignados.</li>{% endfor %}</ul>
+            <a href="{% url 'peluquero_list' %}" class="btn btn-secondary">Volver al listado</a>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

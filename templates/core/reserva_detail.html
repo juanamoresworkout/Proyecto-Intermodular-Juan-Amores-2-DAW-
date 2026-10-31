@@ -1,0 +1,22 @@
+{% extends "common/base_intranet.html" %}
+{% block main_content %}
+<div class="container">
+    <h1>Detalle de la reserva</h1>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">Reserva {{ reserva.pk }}</h5>
+            <p><strong>Cliente:</strong> {{ reserva.cliente|default:"Cliente eliminado" }}</p>
+            <p><strong>Peluquero:</strong> {{ reserva.peluquero }}</p>
+            <p><strong>Inicio:</strong> {{ reserva.fecha_inicio|date:"d/m/Y H:i" }}</p>
+            <p><strong>Fin:</strong> {{ reserva.fecha_fin|date:"d/m/Y H:i" }}</p>
+            <p><strong>Duración:</strong> {{ reserva.duracion_total_minutos }} minutos</p>
+            <p><strong>Precio:</strong> {{ reserva.precio_total }} €</p>
+            <p><strong>Estado:</strong> {{ reserva.get_estado_display }}</p>
+            <p><strong>Servicios:</strong></p>
+            <ul>{% for servicio in reserva.servicios.all %}<li>{{ servicio.nombre }} — {{ servicio.precio }} €</li>{%
+                empty %}<li>No hay servicios asociados.</li>{% endfor %}</ul>
+            <a href="{% url 'reserva_list' %}" class="btn btn-secondary">Volver al listado</a>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

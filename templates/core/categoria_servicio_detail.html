@@ -1,0 +1,13 @@
+{% extends "common/base_intranet.html" %}
+{% block main_content %}
+<div class="container">
+    <h1>Detalle de la categoría</h1>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ categoria_servicio.nombre }}</h5>
+            <p><strong>Descripción:</strong> {{ categoria_servicio.descripcion|default:"Sin descripción" }}</p>
+            <a href="{% url 'categoria_servicio_list' %}" class="btn btn-secondary">Volver al listado</a>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

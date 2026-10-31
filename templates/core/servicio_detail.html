@@ -1,0 +1,17 @@
+{% extends "common/base_intranet.html" %}
+{% block main_content %}
+<div class="container">
+    <h1>Detalle del servicio</h1>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ servicio.nombre }}</h5>
+            <p><strong>Categoría:</strong> {{ servicio.categoria }}</p>
+            <p><strong>Descripción:</strong> {{ servicio.descripcion|default:"Sin descripción" }}</p>
+            <p><strong>Duración:</strong> {{ servicio.duracion_minutos }} minutos</p>
+            <p><strong>Precio:</strong> {{ servicio.precio }} €</p>
+            <p><strong>Estado:</strong> {{ servicio.activo|yesno:"Activo,Inactivo" }}</p>
+            <a href="{% url 'servicio_list' %}" class="btn btn-secondary">Volver al listado</a>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

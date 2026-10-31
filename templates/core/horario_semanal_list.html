@@ -1,0 +1,13 @@
+{% extends "common/base_intranet.html" %}
+{% block main_content %}
+<div class="container">
+    <h1>Horarios semanales</h1>
+    <ul class="list-group mt-3">
+        {% for horario in object_list %}<a href="{% url 'horario_semanal_detail' pk=horario.pk %}"
+            class="list-group-item list-group-item-action">{{ horario.peluquero }} — {{ horario.get_dia_semana_display
+            }} — {{ horario.hora_inicio|time:"H:i" }} a {{ horario.hora_fin|time:"H:i" }}</a>
+        {% empty %}<li class="list-group-item">No existen horarios semanales.</li>{% endfor %}
+    </ul>
+    {% include "common/pagination.html" %}
+</div>
+{% endblock main_content %}
