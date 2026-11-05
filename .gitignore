@@ -227,3 +227,13 @@ piapp-env/
 
 # UD3.2.e: Archivos multimedia subidos por los usuarios.
 /media/
+
+# Archivos temporales locales de revisión y herramientas.
+/tmp/
+tmp_*.py
+
+# Configuración local del editor.
+.vscode/
+
+# Contexto local para continuar el proyecto en otros chats.
+CONTEXTO_PROYECTO.md

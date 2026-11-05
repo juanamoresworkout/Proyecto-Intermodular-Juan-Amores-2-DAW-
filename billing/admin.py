@@ -17,7 +17,9 @@ class ClienteAdmin(admin.ModelAdmin):
 class FacturaAdmin(admin.ModelAdmin):
     list_display = ('numero', 'fecha', 'total')
     list_display_links = ('numero', 'fecha', 'total')
+    # Permite limitar el listado a las facturas de un cliente concreto.
     list_filter = ('cliente',)
+    # Además del número, busca datos atravesando la relación con Cliente.
     search_fields = (
         'numero',
         'cliente__nombre',
@@ -28,9 +30,12 @@ class FacturaAdmin(admin.ModelAdmin):
 # UD3.4.b: Configura la gestión de cobros según el anexo II corregido.
 @admin.register(Cobro)
 class CobroAdmin(admin.ModelAdmin):
+    # numero_factura es un método de esta clase, no un campo de Cobro.
     list_display = ('numero_factura', 'fecha', 'importe')
     list_display_links = ('numero_factura', 'fecha', 'importe')
+    # Llega al cliente pasando primero por la factura del cobro.
     list_filter = ('factura__cliente',)
+    # Permite buscar por la factura y por su cliente relacionado.
     search_fields = (
         'factura__numero',
         'factura__cliente__nombre',
@@ -40,8 +45,11 @@ class CobroAdmin(admin.ModelAdmin):
 
     # Muestra el número de factura asociado al cobro.
     @admin.display(
+        # Texto que aparece en la cabecera de la columna calculada.
         description='N.º factura',
+        # Campo real que Django usa al ordenar esta columna.
         ordering='factura__numero',
     )
     def numero_factura(self, cobro):
+        # Desde el cobro accede a su factura y devuelve solo su número.
         return cobro.factura.numero
