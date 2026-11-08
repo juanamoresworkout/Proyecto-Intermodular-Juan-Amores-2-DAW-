@@ -1,0 +1,633 @@
+<!doctype html>
+<!--
+  BOCETO DIDACTICO: PAGINA HELLO
+
+  Este archivo contiene las tres capas basicas de una pagina web:
+  1. HTML: define la estructura y el significado del contenido.
+  2. CSS: controla el aspecto visual, la adaptacion y la accesibilidad visual.
+  3. JavaScript: cambia la interfaz entre sus cuatro estados.
+
+  Es un boceto independiente. No se conecta al backend y no forma parte todavia
+  del frontend definitivo. Los botones de previsualizacion situados al final
+  sirven solamente para estudiar los estados.
+-->
+<html lang="es">
+<head>
+  <!-- UTF-8 permite mostrar correctamente caracteres internacionales. -->
+  <meta charset="utf-8">
+
+  <!-- Hace que el ancho de la pagina se adapte correctamente a moviles. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boceto Hello - Barberia Liquid Glass</title>
+  <style>
+    /* ================================================================
+       1. DESIGN TOKENS
+
+       Son variables reutilizables. Si cambiamos aqui un color o espacio,
+       todos los componentes que usan la variable se actualizan a la vez.
+       ================================================================ */
+    :root {
+      /* Paleta principal aprobada en DESIGN.md. */
+      --color-primary: #123b5d;
+      --color-on-primary: #ffffff;
+      --color-surface: #f6fafe;
+      --color-on-surface: #17212b;
+      --color-secondary-text: #4d5b69;
+      --color-barber-red: #a62b2b;
+      --color-error: #a62b2b;
+      --color-glass: rgb(255 255 255 / 30%);
+      --color-glass-strong: rgb(255 255 255 / 55%);
+      --color-glass-border: rgb(255 255 255 / 68%);
+
+      /* Escala de espaciado basada en multiplos de 8 pixeles. */
+      --space-s: 8px;
+      --space-m: 16px;
+      --space-l: 24px;
+      --space-xl: 32px;
+
+      /* Radios, sombra y patron compartidos por varios componentes. */
+      --radius-card: 24px;
+      --radius-pill: 999px;
+      --shadow-glass: 0 18px 48px rgb(18 59 93 / 14%);
+
+      /* Franjas de barberia con opacidad muy baja para no dificultar la lectura. */
+      --barber-reflection: repeating-linear-gradient(
+        135deg,
+        rgb(18 59 93 / 10%) 0 18px,
+        rgb(255 255 255 / 16%) 18px 36px,
+        rgb(166 43 43 / 10%) 36px 54px
+      );
+    }
+
+    /* ================================================================
+       2. REGLAS GENERALES Y FONDO
+       ================================================================ */
+
+    /* Incluye padding y border dentro del ancho declarado de cada elemento. */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--color-on-surface);
+
+      /* Varias capas crean manchas de color suaves bajo el cristal. */
+      background:
+        radial-gradient(circle at 14% 20%, rgb(45 122 180 / 20%), transparent 34%),
+        radial-gradient(circle at 88% 72%, rgb(166 43 43 / 9%), transparent 32%),
+        linear-gradient(145deg, #edf7ff 0%, var(--color-surface) 48%, #e7f3fc 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    /* Los controles heredan la tipografia definida en body. */
+    button,
+    input {
+      font: inherit;
+    }
+
+    /* 48px ofrece una superficie comoda para raton y pantalla tactil. */
+    button,
+    a,
+    input {
+      min-height: 48px;
+    }
+
+    /* Muestra claramente el elemento activo al navegar con la tecla Tab. */
+    :focus-visible {
+      outline: 3px solid var(--color-primary);
+      outline-offset: 3px;
+    }
+
+    .page-shell {
+      /* Nunca supera 1180px y deja 16px a cada lado en pantallas pequenas. */
+      width: min(1180px, calc(100% - 32px));
+      margin-inline: auto;
+      padding-block: var(--space-l) 48px;
+    }
+
+    /* ================================================================
+       3. MATERIAL DE CRISTAL REUTILIZABLE
+       ================================================================ */
+
+    .glass {
+      /* Fondo de seguridad para navegadores sin backdrop-filter. */
+      background: rgb(255 255 255 / 82%);
+      border: 1px solid var(--color-glass-border);
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 80%),
+        var(--shadow-glass);
+    }
+
+    /* Solo activa el efecto avanzado si el navegador lo admite. */
+    @supports (backdrop-filter: blur(18px)) {
+      .glass {
+        /* El gradiente anade reflejos azul y rojo casi imperceptibles. */
+        background:
+          linear-gradient(135deg, rgb(18 59 93 / 4%), transparent 36%, rgb(166 43 43 / 4%)),
+          var(--color-glass);
+        backdrop-filter: blur(18px) saturate(125%);
+      }
+    }
+
+    /* ================================================================
+       4. CABECERA, MARCA Y NAVEGACION
+       ================================================================ */
+
+    .site-header {
+      /* Flex coloca marca y navegacion en la misma fila. */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-l);
+      min-height: 88px;
+      padding: 14px 20px;
+      border-radius: var(--radius-pill);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .barber-mark {
+      /* El logotipo se construye solo con CSS, sin imagen externa. */
+      position: relative;
+      width: 52px;
+      height: 52px;
+      overflow: hidden;
+      flex: 0 0 auto;
+      border: 2px solid var(--color-primary);
+      border-radius: 50%;
+
+      /* Franjas clasicas azul, blanco y rojo. */
+      background: repeating-linear-gradient(
+        135deg,
+        var(--color-primary) 0 10px,
+        #ffffff 10px 20px,
+        var(--color-barber-red) 20px 30px,
+        #ffffff 30px 40px
+      );
+      box-shadow: inset 0 0 0 6px rgb(255 255 255 / 72%);
+    }
+
+    .primary-nav {
+      /* Agrupa los dos enlaces horizontalmente. */
+      display: flex;
+      gap: var(--space-s);
+    }
+
+    .primary-nav a {
+      /* inline-flex permite centrar el texto dentro de cada capsula. */
+      display: inline-flex;
+      align-items: center;
+      padding-inline: 20px;
+      color: var(--color-on-surface);
+      border: 1px solid transparent;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .primary-nav a[aria-current="page"] {
+      /* aria-current identifica visual y semanticamente la pagina activa. */
+      background: rgb(255 255 255 / 34%);
+      border-color: rgb(255 255 255 / 70%);
+      box-shadow:
+        inset -2px -1px 5px rgb(166 43 43 / 10%),
+        inset 2px 1px 5px rgb(18 59 93 / 10%);
+    }
+
+    .barber-divider {
+      /* Barra decorativa fina; aria-hidden evita que se anuncie como contenido. */
+      height: 10px;
+      margin: 14px 6px 40px;
+      border: 1px solid rgb(255 255 255 / 68%);
+      border-radius: var(--radius-pill);
+      background: var(--barber-reflection), rgb(255 255 255 / 18%);
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 78%),
+        0 3px 12px rgb(18 59 93 / 10%);
+      backdrop-filter: blur(12px);
+    }
+
+    main {
+      /* Limita la longitud del formulario y lo centra. */
+      width: min(880px, 100%);
+      margin-inline: auto;
+    }
+
+    /* ================================================================
+       5. TARJETA PRINCIPAL Y TIPOGRAFIA
+       ================================================================ */
+
+    .hello-card {
+      padding: clamp(24px, 5vw, 48px);
+      border-radius: var(--radius-card);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 var(--space-s);
+      /* clamp adapta el titulo entre 36px y 48px segun la pantalla. */
+      font-size: clamp(36px, 6vw, 48px);
+      line-height: 1.05;
+    }
+
+    .intro {
+      margin: 0 auto var(--space-l);
+      color: var(--color-secondary-text);
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    .hello-form {
+      /* Grid apila etiqueta, campo y boton con separacion uniforme. */
+      display: grid;
+      gap: var(--space-m);
+      text-align: left;
+    }
+
+    .field-label {
+      margin-left: 18px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* ================================================================
+       6. CAMPO LIQUID GLASS
+       ================================================================ */
+
+    .name-input {
+      width: 100%;
+      min-height: 58px;
+      padding-inline: 22px;
+      color: var(--color-on-surface);
+
+      /* Tres tonos tenues producen la identidad de barberia dentro del cristal. */
+      background:
+        linear-gradient(135deg, rgb(18 59 93 / 5%), rgb(255 255 255 / 28%), rgb(166 43 43 / 5%)),
+        rgb(255 255 255 / 40%);
+      border: 1px solid rgb(255 255 255 / 72%);
+      border-radius: var(--radius-pill);
+
+      /* Sombras interiores simulan luz y refraccion en los bordes. */
+      box-shadow:
+        inset 0 1px 1px rgb(255 255 255 / 90%),
+        inset 2px 0 7px rgb(18 59 93 / 8%),
+        inset -2px 0 7px rgb(166 43 43 / 8%),
+        0 8px 22px rgb(18 59 93 / 9%);
+      backdrop-filter: blur(18px) saturate(125%);
+      font-size: 17px;
+    }
+
+    .name-input::placeholder {
+      /* opacity: 1 evita que algunos navegadores lo aclaren demasiado. */
+      color: #4d5b69;
+      opacity: 1;
+    }
+
+    /* ================================================================
+       7. BOTON PRINCIPAL
+       ================================================================ */
+
+    .greeting-button {
+      width: 100%;
+      min-height: 58px;
+      padding-inline: 22px;
+      color: var(--color-on-primary);
+
+      /* El azul es mas opaco porque esta es la accion principal. */
+      background:
+        linear-gradient(135deg, rgb(255 255 255 / 16%), transparent 45%, rgb(166 43 43 / 10%)),
+        rgb(18 59 93 / 88%);
+      border: 1px solid rgb(255 255 255 / 55%);
+      border-radius: var(--radius-pill);
+      box-shadow:
+        inset 0 1px 1px rgb(255 255 255 / 46%),
+        0 10px 26px rgb(18 59 93 / 20%);
+      backdrop-filter: blur(18px) saturate(125%);
+      cursor: pointer;
+      font-weight: 600;
+      transition: filter 180ms ease, transform 180ms ease;
+    }
+
+    .greeting-button:hover:not(:disabled) {
+      /* Solo responde al hover si el boton no esta deshabilitado. */
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .greeting-button:disabled {
+      /* Durante la carga se ve inactivo y no acepta otra peticion. */
+      cursor: wait;
+      opacity: 0.68;
+    }
+
+    /* ================================================================
+       8. ZONA DE RESULTADO Y SUS ESTADOS
+       ================================================================ */
+
+    .result-panel {
+      /* Grid con place-items centra el mensaje vertical y horizontalmente. */
+      min-height: 112px;
+      margin-top: var(--space-l);
+      padding: var(--space-l);
+      display: grid;
+      place-items: center;
+      color: var(--color-on-surface);
+      background: var(--color-glass-strong);
+      border: 1px solid rgb(255 255 255 / 72%);
+      border-radius: var(--radius-card);
+      box-shadow: inset 0 1px 0 rgb(255 255 255 / 78%);
+      backdrop-filter: blur(12px);
+    }
+
+    .result-panel[data-state="initial"] {
+      /* Estado inicial: texto secundario, sin mostrar todavia un saludo. */
+      color: var(--color-secondary-text);
+      font-size: 16px;
+    }
+
+    .result-panel[data-state="success"] {
+      /* Estado correcto: el saludo se convierte en el contenido destacado. */
+      color: var(--color-primary);
+      font-size: clamp(26px, 4vw, 32px);
+      font-weight: 700;
+    }
+
+    .result-panel[data-state="error"] {
+      /* Estado error: color, borde y texto comunican el problema juntos. */
+      color: var(--color-error);
+      background: rgb(166 43 43 / 10%);
+      border-color: rgb(166 43 43 / 28%);
+      font-weight: 600;
+    }
+
+    .loading-content,
+    .error-content {
+      /* Alinea el icono o spinner junto a su mensaje. */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .spinner {
+      /* Tres lados claros y uno azul crean el indicador circular. */
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgb(18 59 93 / 18%);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 800ms linear infinite;
+    }
+
+    /* La animacion completa una vuelta de 360 grados. */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ================================================================
+       9. CONTROLES DIDACTICOS DEL BOCETO
+
+       Permiten mostrar manualmente cada estado. Se eliminaran al integrar
+       la pantalla en el frontend real.
+       ================================================================ */
+
+    .preview-tools {
+      margin-top: var(--space-l);
+      padding: var(--space-m);
+      border: 1px dashed rgb(18 59 93 / 30%);
+      border-radius: 18px;
+    }
+
+    .preview-tools p {
+      margin: 0 0 12px;
+      color: var(--color-secondary-text);
+      font-size: 14px;
+    }
+
+    .state-buttons {
+      /* flex-wrap permite que los botones bajen de linea si no caben. */
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-s);
+    }
+
+    .state-buttons button {
+      padding-inline: 16px;
+      color: var(--color-primary);
+      background: rgb(255 255 255 / 64%);
+      border: 1px solid rgb(18 59 93 / 20%);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+    }
+
+    /* ================================================================
+       10. DISENO RESPONSIVE
+       ================================================================ */
+
+    @media (max-width: 640px) {
+      .site-header {
+        /* En movil, marca y navegacion se colocan en dos filas. */
+        align-items: stretch;
+        flex-direction: column;
+        border-radius: var(--radius-card);
+      }
+
+      .brand {
+        justify-content: center;
+      }
+
+      .primary-nav a {
+        flex: 1;
+        justify-content: center;
+      }
+
+      .barber-divider {
+        margin-bottom: var(--space-l);
+      }
+    }
+
+    /* ================================================================
+       11. PREFERENCIAS DE ACCESIBILIDAD
+       ================================================================ */
+
+    @media (prefers-reduced-motion: reduce) {
+      /* Reduce animaciones si la persona lo solicita en su sistema. */
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      /* Sustituye el cristal por superficies casi opacas cuando se admite. */
+      .glass,
+      .name-input,
+      .result-panel {
+        background: rgb(255 255 255 / 92%);
+        backdrop-filter: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Contenedor general que centra y limita toda la pagina. -->
+  <div class="page-shell">
+    <!--
+      Cabecera semantica. La clase glass aplica el material reutilizable.
+      La marca esta a la izquierda y la navegacion a la derecha.
+    -->
+    <header class="site-header glass">
+      <div class="brand">
+        <!-- Es decorativo porque el nombre Barbershop ya identifica la marca. -->
+        <span class="barber-mark" aria-hidden="true"></span>
+        <span>Barbershop</span>
+      </div>
+
+      <!-- aria-label explica la finalidad del bloque de enlaces. -->
+      <nav class="primary-nav" aria-label="Navegacion principal">
+        <a href="#inicio">Inicio</a>
+        <!-- aria-current indica que Hello es la pagina actual. -->
+        <a href="#hello" aria-current="page">Hello</a>
+      </nav>
+    </header>
+
+    <!-- Franja puramente decorativa; por eso no se anuncia. -->
+    <div class="barber-divider" aria-hidden="true"></div>
+
+    <!-- main contiene el contenido unico y principal de la pagina. -->
+    <main id="hello">
+      <!-- aria-labelledby relaciona la seccion con el titulo Hello. -->
+      <section class="hello-card glass" aria-labelledby="hello-title">
+        <h1 id="hello-title">Hello</h1>
+        <p class="intro">Escribe tu nombre y te saludare.</p>
+
+        <!-- Formulario real que tambien funciona al pulsar Enter. -->
+        <form class="hello-form" id="hello-form">
+          <!-- for="name" conecta la etiqueta con el input id="name". -->
+          <label class="field-label" for="name">Nombre (opcional)</label>
+          <input
+            class="name-input"
+            id="name"
+            name="name"
+            type="text"
+            <!-- autocomplete permite que el navegador sugiera el nombre guardado. -->
+            autocomplete="name"
+            placeholder="Por ejemplo, Ana"
+          >
+
+          <!-- type="submit" envia el formulario y activa el evento JavaScript. -->
+          <button class="greeting-button" id="greeting-button" type="submit">
+            Saludar
+          </button>
+        </form>
+
+        <!--
+          role="status" y aria-live hacen que un lector de pantalla anuncie
+          cambios como Cargando o Hello World sin mover el foco.
+        -->
+        <div class="result-panel" id="result" data-state="initial" role="status" aria-live="polite">
+          Escribe tu nombre o pulsa Saludar directamente.
+        </div>
+      </section>
+
+      <!-- Panel exclusivo del boceto para estudiar los cuatro estados. -->
+      <aside class="preview-tools" aria-label="Herramientas del boceto">
+        <p>Solo para revisar el boceto: muestra cada estado de la interfaz.</p>
+        <div class="state-buttons">
+          <button type="button" data-preview-state="initial">Inicial</button>
+          <button type="button" data-preview-state="loading">Cargando</button>
+          <button type="button" data-preview-state="success">Correcto</button>
+          <button type="button" data-preview-state="error">Error</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    /* ================================================================
+       12. JAVASCRIPT: REFERENCIAS A ELEMENTOS HTML
+
+       querySelector busca un elemento. querySelectorAll devuelve una lista.
+       Guardamos las referencias para no buscarlas cada vez que cambie el estado.
+       ================================================================ */
+    const form = document.querySelector("#hello-form");
+    const nameInput = document.querySelector("#name");
+    const greetingButton = document.querySelector("#greeting-button");
+    const result = document.querySelector("#result");
+    const previewButtons = document.querySelectorAll("[data-preview-state]");
+
+    /*
+      Contenido predeterminado de cada estado.
+      initial no necesita HTML especial. loading y error incluyen elementos
+      auxiliares, por eso se guardan como cadenas HTML.
+    */
+    const stateContent = {
+      initial: "Escribe tu nombre o pulsa Saludar directamente.",
+      loading: '<span class="loading-content"><span class="spinner" aria-hidden="true"></span>Preparando tu saludo...</span>',
+      success: "Hello World Ana",
+      error: '<span class="error-content"><span aria-hidden="true">&#9888;</span>No se ha podido contactar con el backend. Intentalo de nuevo.</span>',
+    };
+
+    /*
+      Cambia toda la interfaz de forma centralizada.
+
+      state: initial, loading, success o error.
+      customMessage: permite mostrar un saludo con el nombre introducido.
+    */
+    function showState(state, customMessage) {
+      /* data-state permite que CSS aplique el estilo correspondiente. */
+      result.dataset.state = state;
+
+      /* Los errores se anuncian con mas urgencia que los estados normales. */
+      result.setAttribute("role", state === "error" ? "alert" : "status");
+
+      /* ?? usa customMessage si existe; en caso contrario usa stateContent. */
+      result.innerHTML = customMessage ?? stateContent[state];
+
+      /* Impide varios envios mientras se simula la carga. */
+      greetingButton.disabled = state === "loading";
+      greetingButton.textContent = state === "loading" ? "Saludando..." : "Saludar";
+    }
+
+    /* Se ejecuta al pulsar Saludar o Enter dentro del formulario. */
+    form.addEventListener("submit", (event) => {
+      /* Evita que el navegador recargue la pagina. */
+      event.preventDefault();
+      showState("loading");
+
+      /*
+        Simula una peticion al backend que tarda 900 milisegundos.
+        En el frontend real se sustituira por fetch().
+      */
+      window.setTimeout(() => {
+        /* trim elimina espacios al principio y al final del nombre. */
+        const name = nameInput.value.trim();
+
+        /* Operador ternario: elige saludo con nombre o sin nombre. */
+        const greeting = name ? `Hello World ${name}` : "Hello World";
+        showState("success", greeting);
+      }, 900);
+    });
+
+    /* Anade el comportamiento a cada boton didactico de estado. */
+    previewButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        /* dataset.previewState lee el atributo data-preview-state. */
+        showState(button.dataset.previewState);
+      });
+    });
+  </script>
+</body>
+</html>

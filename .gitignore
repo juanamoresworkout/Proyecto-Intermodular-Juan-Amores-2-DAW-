@@ -230,6 +230,7 @@ piapp-env/
 
 # Archivos temporales locales de revisión y herramientas.
 /tmp/
+/.tmp/
 tmp_*.py
 
 # Configuración local del editor.
