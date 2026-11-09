@@ -1,0 +1,65 @@
+/* Importa las decisiones de diseño antes de utilizarlas con var(). */
+@import './tokens.css';
+
+/* Hace que padding y border formen parte del ancho total del elemento. */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  /* Valores generales heredados por toda la aplicación. */
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  color: var(--color-on-surface);
+
+  background-color: var(--color-surface);
+  /* Reflejos decorativos muy suaves inspirados en el poste de barbería. */
+  background-image:
+    radial-gradient(
+      circle at top left,
+      rgb(18 59 93 / 10%),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgb(166 43 43 / 8%),
+      transparent 35%
+    );
+}
+
+button,
+input {
+  /* Los controles utilizan la misma tipografía que el resto de la web. */
+  font: inherit;
+}
+
+/* Foco visible para navegación mediante teclado */
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+#app {
+  /* Permite que la estructura de Vue ocupe toda la pantalla. */
+  min-height: 100vh;
+}
+
+/* Menos animaciones si el usuario así lo ha configurado */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

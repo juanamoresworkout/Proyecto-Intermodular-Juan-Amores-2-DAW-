@@ -1,0 +1,52 @@
+/* Design tokens de Apple HIG / Liquid Glass adaptados a la barbería */
+
+/*
+ * :root representa el nivel superior del documento.
+ * Los componentes reutilizan estos valores mediante var(--nombre-del-token).
+ */
+:root {
+  /* Colores */
+  --color-primary: #123b5d;
+  --color-on-primary: #ffffff;
+  --color-surface: #f6fafe;
+  --color-on-surface: #17212b;
+  --color-secondary-text: #4d5b69;
+  --color-error: #a62b2b;
+  --color-barber-red: #a62b2b;
+
+  /* Superficies Liquid Glass */
+  --color-glass: rgb(255 255 255 / 30%);
+  --color-glass-border: rgb(255 255 255 / 68%);
+
+  /* Tipografía */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-title: 3rem;
+  --font-size-body: 1.0625rem;
+
+  /* Espaciado */
+  --space-s: 8px;
+  --space-m: 16px;
+  --space-l: 24px;
+  --space-xl: 32px;
+
+  /* Formas */
+  --radius-m: 24px;
+  --radius-pill: 999px;
+
+  /* Dimensiones */
+  --content-max-width: 880px;
+  --control-min-height: 48px;
+
+  /* Efectos */
+  --glass-blur: 18px;
+  --glass-saturation: 125%;
+  --glass-shadow: 0 8px 30px rgb(18 59 93 / 12%);
+
+  /* Reflejo decorativo de barbería */
+  --barber-reflection: repeating-linear-gradient(
+    135deg,
+    rgb(18 59 93 / 10%) 0 18px,
+    rgb(255 255 255 / 16%) 18px 36px,
+    rgb(166 43 43 / 10%) 36px 54px
+  );
+}
