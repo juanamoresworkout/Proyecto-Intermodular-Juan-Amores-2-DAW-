@@ -1,6 +1,4 @@
-# Lógica preparada para crear reservas de forma segura.
-# Falta conectarla a una vista o formulario: las vistas actuales solo
-# muestran listas y detalles, por lo que crear_reserva todavía no se llama.
+# Funciones reutilizables para calcular y validar reservas.
 
 # timedelta permite sumar minutos a la fecha de inicio de una reserva.
 from datetime import timedelta
@@ -11,10 +9,7 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 # timezone usa la fecha, la hora y la zona horaria configuradas en Django.
 from django.utils import timezone
-# transaction permite que la creación completa se guarde o se deshaga junta.
-from django.db import transaction
-
-# Modelos que se consultan o se crean desde este archivo.
+# Modelos consultados por las reglas de disponibilidad.
 from .models import ExcepcionHorario, HorarioSemanal, Reserva
 
 
@@ -84,28 +79,51 @@ def cabe_en_horario(peluquero, fecha_inicio, fecha_fin) -> bool:
 
 
 # Comprueba que el peluquero no tenga otra reserva durante ese intervalo.
-def peluquero_esta_libre(peluquero, fecha_inicio, fecha_fin) -> bool:
+def peluquero_esta_libre(
+    peluquero,
+    fecha_inicio,
+    fecha_fin,
+    reserva_actual=None,
+) -> bool:
     # Busca reservas del mismo peluquero que se crucen con la nueva cita.
-    reserva_solapada = Reserva.objects.filter(
+    reservas_solapadas = Reserva.objects.filter(
         peluquero=peluquero,
         fecha_inicio__lt=fecha_fin,
         fecha_fin__gt=fecha_inicio,
     ).exclude(
         # Las reservas canceladas ya no ocupan tiempo.
         estado_id='cancelada',
-    ).exists()
+    )
+
+    # Al actualizar, no compara la reserva con su propio intervalo guardado.
+    if reserva_actual and reserva_actual.pk:
+        reservas_solapadas = reservas_solapadas.exclude(
+            pk=reserva_actual.pk,
+        )
+
+    reserva_solapada = reservas_solapadas.exists()
 
     # Si encuentra una reserva solapada, devuelve False; si no, True.
     return not reserva_solapada
 
 
 # Devuelve True solamente si la cita cumple todas las condiciones.
-def esta_disponible(peluquero, fecha_inicio, fecha_fin) -> bool:
+def esta_disponible(
+    peluquero,
+    fecha_inicio,
+    fecha_fin,
+    reserva_actual=None,
+) -> bool:
     # and detiene la comprobación en cuanto una condición devuelve False.
     return (
         intervalo_es_valido(fecha_inicio, fecha_fin)
         and cabe_en_horario(peluquero, fecha_inicio, fecha_fin)
-        and peluquero_esta_libre(peluquero, fecha_inicio, fecha_fin)
+        and peluquero_esta_libre(
+            peluquero,
+            fecha_inicio,
+            fecha_fin,
+            reserva_actual=reserva_actual,
+        )
     )
 
 
@@ -146,20 +164,28 @@ def calcular_datos_reserva(fecha_inicio, servicios):
     # Devuelve los tres datos para utilizarlos al crear la reserva.
     return fecha_fin, duracion_total, precio_total
 
-# Ejecuta toda la función dentro de una transacción. Si ocurre un error,
-# evita guardar una reserva a medias.
-@transaction.atomic
-def crear_reserva(cliente, peluquero, fecha_inicio, servicios):
-    # Convierte los servicios en una lista para poder recorrerlos varias veces.
+
+# UD4.2.h: Centraliza las reglas necesarias para crear o actualizar reservas.
+def validar_reserva(
+    cliente,
+    peluquero,
+    fecha_inicio,
+    servicios,
+    reserva_actual=None,
+):
+    # Materializa la selección para validarla y calcularla sin repetir consultas.
     servicios = list(servicios)
 
-    # No permite reservar sin cliente ni con un cliente inactivo.
+    # No permite crear ni actualizar citas para un cliente desactivado.
     if not cliente or not cliente.activo:
-        raise ValidationError('El cliente no está activo.')
+        raise ValidationError('El cliente seleccionado no está activo.')
 
-    # Recorre los servicios y comprueba que el peluquero tenga asignado cada uno.
+    # Un profesional desactivado tampoco puede recibir nuevas reservas.
+    if not peluquero or not peluquero.activo:
+        raise ValidationError('El peluquero seleccionado no está activo.')
+
+    # Comprueba individualmente que el profesional realiza cada servicio pedido.
     if any(
-        # Si no encuentra el servicio entre los del peluquero, devuelve True.
         not peluquero.servicios.filter(pk=servicio.pk).exists()
         for servicio in servicios
     ):
@@ -167,26 +193,22 @@ def crear_reserva(cliente, peluquero, fecha_inicio, servicios):
             'El peluquero no realiza todos los servicios seleccionados.'
         )
 
-    # Valida los servicios y recibe la hora final, la duración y el precio.
+    # Calcula primero el final necesario para poder validar todo el intervalo.
     fecha_fin, duracion, precio = calcular_datos_reserva(
-        fecha_inicio, servicios,
+        fecha_inicio,
+        servicios,
     )
 
-    # Comprueba que la cita sea futura, quepa en el horario y no se solape.
-    if not esta_disponible(peluquero, fecha_inicio, fecha_fin):
-        raise ValidationError('El horario no está disponible.')
+    # Reúne futuro, horario laboral, excepciones y ausencia de solapamientos.
+    if not esta_disponible(
+        peluquero,
+        fecha_inicio,
+        fecha_fin,
+        reserva_actual=reserva_actual,
+    ):
+        raise ValidationError(
+            'El horario seleccionado no está disponible.'
+        )
 
-    # Crea primero la reserva con los campos que no son muchos a muchos.
-    reserva = Reserva.objects.create(
-        cliente=cliente,
-        peluquero=peluquero,
-        fecha_inicio=fecha_inicio,
-        fecha_fin=fecha_fin,
-        duracion_total_minutos=duracion,
-        precio_total=precio,
-    )
-    # Guarda después los servicios en la tabla intermedia de la relación M2M.
-    reserva.servicios.set(servicios)
-
-    # Devuelve el objeto creado para que la futura vista pueda utilizarlo.
-    return reserva
+    # La vista asigna estos valores derivados al objeto antes de guardarlo.
+    return fecha_fin, duracion, precio
