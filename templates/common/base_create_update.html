@@ -1,0 +1,43 @@
+{% extends "common/base_intranet.html" %}
+
+{% block main_content %}
+<!-- UD4.2.c: Muestra el formulario común de creación y actualización. -->
+<div class="container">
+    <!-- object existe al actualizar; si no existe, la operación es crear. -->
+    {% if object %}
+        <h2>{{ titulo_actualizacion }}</h2>
+    {% else %}
+        <h2>{{ titulo_creacion }}</h2>
+    {% endif %}
+
+    <!-- POST envía los datos al mismo CreateView o UpdateView. -->
+    <form method="post">
+        <!-- Protege el envío frente a peticiones externas falsificadas. -->
+        {% csrf_token %}
+
+        <!-- Django genera los campos indicados por fields; as_p los separa. -->
+        {{ form.as_p }}
+
+        <!-- El texto del botón refleja la operación que se ejecutará. -->
+        {% if object %}
+            <button type="submit" class="btn btn-success">
+                Actualizar
+            </button>
+        {% else %}
+            <button type="submit" class="btn btn-success">
+                Crear
+            </button>
+        {% endif %}
+
+        <!-- El borrado solo está disponible para un objeto ya guardado. -->
+        {% if object and url_borrado %}
+            <a
+                href="{% url url_borrado object.pk %}"
+                class="btn btn-danger"
+            >
+                Eliminar
+            </a>
+        {% endif %}
+    </form>
+</div>
+{% endblock main_content %}

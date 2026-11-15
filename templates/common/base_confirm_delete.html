@@ -1,0 +1,23 @@
+{% extends "common/base_intranet.html" %}
+
+{% block main_content %}
+<!-- UD4.2.e: Muestra la confirmación común para eliminar un objeto. -->
+<div class="container">
+    <!-- El mixin de contexto adapta el título a cada modelo. -->
+    <h2>{{ titulo }}</h2>
+
+    <!-- Confirmar mediante POST evita que una visita GET elimine datos. -->
+    <form method="post">
+        <!-- Django exige el token CSRF para aceptar la confirmación. -->
+        {% csrf_token %}
+
+        <!-- El texto ya incluye la representación del objeto concreto. -->
+        <p>{{ mensaje_confirmacion }}</p>
+
+        <!-- DeleteView intenta borrar y ProtectedDeleteMixin frena dependencias. -->
+        <button type="submit" class="btn btn-danger">
+            Confirmar
+        </button>
+    </form>
+</div>
+{% endblock main_content %}
