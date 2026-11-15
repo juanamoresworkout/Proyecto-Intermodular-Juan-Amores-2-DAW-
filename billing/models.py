@@ -5,19 +5,33 @@ from common.validators import telefono_espanol
 
 # UD3.3.g: Almacena los datos personales y de contacto del cliente.
 class Cliente(models.Model):
-    nombre = models.CharField(max_length=256)
-    apellidos = models.CharField(max_length=512)
+    nombre = models.CharField(
+        verbose_name='nombre',
+        max_length=256,
+    )
+    apellidos = models.CharField(
+        verbose_name='apellidos',
+        max_length=512,
+    )
     nif = models.CharField(
+        verbose_name='NIF',
         max_length=20,
         unique=True,
     )
-    email = models.EmailField(unique=True)
+    email = models.EmailField(
+        verbose_name='correo electrónico',
+        unique=True,
+    )
     telefono = models.CharField(
+        verbose_name='teléfono',
         max_length=12,
         validators=[telefono_espanol],
         blank=True,
     )
-    activo = models.BooleanField(default=True)
+    activo = models.BooleanField(
+        verbose_name='activo',
+        default=True,
+    )
 
     # UD3.4.e: Define los nombres del modelo en el administrador.
     class Meta:
@@ -34,16 +48,24 @@ class Cliente(models.Model):
 class Factura(models.Model):
     cliente = models.ForeignKey(
         Cliente,
+        verbose_name='cliente',
         on_delete=models.PROTECT,
         related_name='facturas',
     )
     numero = models.CharField(
+        verbose_name='número de factura',
         max_length=20,
         unique=True,
     )
-    concepto = models.TextField()
-    fecha = models.DateField(default=timezone.now)
+    concepto = models.TextField(
+        verbose_name='concepto',
+    )
+    fecha = models.DateField(
+        verbose_name='fecha',
+        default=timezone.now,
+    )
     total = models.DecimalField(
+        verbose_name='total',
         max_digits=10,
         decimal_places=2,
         default=0,
@@ -65,11 +87,16 @@ class Factura(models.Model):
 class Cobro(models.Model):
     factura = models.ForeignKey(
         Factura,
+        verbose_name='factura',
         on_delete=models.PROTECT,
         related_name='cobros',
     )
-    fecha = models.DateField(default=timezone.now)
+    fecha = models.DateField(
+        verbose_name='fecha',
+        default=timezone.now,
+    )
     importe = models.DecimalField(
+        verbose_name='importe',
         max_digits=10,
         decimal_places=2,
         default=0,

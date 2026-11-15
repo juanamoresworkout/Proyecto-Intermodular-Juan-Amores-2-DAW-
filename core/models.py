@@ -2,16 +2,19 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone 
 
+from common.models import DiaSemana, EstadoReserva
 from common.validators import telefono_espanol
 
 
 # UD3.3.a: Define las categorías que agrupan los servicios de la peluquería.
 class CategoriaServicio(models.Model):
     nombre = models.CharField(
+        verbose_name='nombre',
         max_length=100,
         unique=True,
     )
     descripcion = models.CharField(
+        verbose_name='descripción',
         max_length=255,
         blank=True,
     )
@@ -33,21 +36,32 @@ class CategoriaServicio(models.Model):
 class Servicio(models.Model):
     categoria = models.ForeignKey(
         CategoriaServicio,
+        verbose_name='categoría',
         # Impide eliminar una categoría mientras tenga servicios asociados.
         on_delete=models.PROTECT,
         related_name='servicios',
     )
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(
+        verbose_name='nombre',
+        max_length=100,
+    )
     descripcion = models.CharField(
+        verbose_name='descripción',
         max_length=255,
         blank=True,
     )
-    duracion_minutos = models.PositiveIntegerField()
+    duracion_minutos = models.PositiveIntegerField(
+        verbose_name='duración en minutos',
+    )
     precio = models.DecimalField(
+        verbose_name='precio',
         max_digits=10,
         decimal_places=2,
     )
-    activo = models.BooleanField(default=True)
+    activo = models.BooleanField(
+        verbose_name='activo',
+        default=True,
+    )
 
     # Impide repetir el nombre de un servicio dentro de la misma categoría.
     class Meta:
@@ -69,22 +83,36 @@ class Servicio(models.Model):
 
 # UD3.3.d: Representa a los peluqueros y los servicios que pueden realizar.
 class Peluquero(models.Model):
-    nombre = models.CharField(max_length=100)
-    apellidos = models.CharField(max_length=200)
-    email = models.EmailField(unique=True)
+    nombre = models.CharField(
+        verbose_name='nombre',
+        max_length=100,
+    )
+    apellidos = models.CharField(
+        verbose_name='apellidos',
+        max_length=200,
+    )
+    email = models.EmailField(
+        verbose_name='correo electrónico',
+        unique=True,
+    )
     # Si el teléfono no es español, el validador genera un error de validación.
     telefono = models.CharField(
+        verbose_name='teléfono',
         max_length=12,
         validators=[telefono_espanol],
         blank=True,
     )
     servicios = models.ManyToManyField(
         Servicio,
+        verbose_name='servicios',
         related_name='peluqueros',
         blank=True,
     )
     # Permite ocultar al peluquero de nuevas reservas sin eliminar sus datos.
-    activo = models.BooleanField(default=True)
+    activo = models.BooleanField(
+        verbose_name='activo',
+        default=True,
+    )
 
     class Meta:
         # UD3.4.e: Nombres del modelo.
@@ -100,28 +128,31 @@ class Peluquero(models.Model):
 
 # UD3.3.e: Define el horario habitual de un peluquero para cada día semanal.
 class HorarioSemanal(models.Model):
-    class DiaSemana(models.IntegerChoices):
-        LUNES = 0, 'Lunes'
-        MARTES = 1, 'Martes'
-        MIERCOLES = 2, 'Miércoles'
-        JUEVES = 3, 'Jueves'
-        VIERNES = 4, 'Viernes'
-        SABADO = 5, 'Sábado'
-        DOMINGO = 6, 'Domingo'
-
     peluquero = models.ForeignKey(
         Peluquero,
-        on_delete=models.CASCADE,
+        verbose_name='peluquero',
+        on_delete=models.PROTECT,
         related_name='horarios_semanales',
     )
-    #limita el campo a los días definidos y muestra sus etiquetas en formularios.
-    dia_semana = models.PositiveSmallIntegerField(
-        choices=DiaSemana.choices,
+    # Relaciona cada horario con uno de los días definidos en common.
+    dia_semana = models.ForeignKey(
+        DiaSemana,
+        verbose_name='día de la semana',
+        on_delete=models.PROTECT,
+        related_name='horarios_semanales',
+        db_column='dia_semana',
     )
-    #Guarda horas sin fecha
-    hora_inicio = models.TimeField()
-    hora_fin = models.TimeField()
-    activo = models.BooleanField(default=True)
+    # Guarda horas sin fecha.
+    hora_inicio = models.TimeField(
+        verbose_name='hora de inicio',
+    )
+    hora_fin = models.TimeField(
+        verbose_name='hora de fin',
+    )
+    activo = models.BooleanField(
+        verbose_name='activo',
+        default=True,
+    )
 
     # Compara el nuevo bloque con los horarios del mismo peluquero y día.
     def clean(self):
@@ -205,7 +236,7 @@ class HorarioSemanal(models.Model):
         ]
     def __str__(self):
         return (
-            f'{self.peluquero} - {self.get_dia_semana_display()} '
+            f'{self.peluquero} - {self.dia_semana} '
             f'de {self.hora_inicio} a {self.hora_fin}'
         )
 
@@ -215,24 +246,33 @@ class ExcepcionHorario(models.Model):
     # peluquero, tambien se borran sus excepciones.
     peluquero = models.ForeignKey(
         Peluquero,
-        on_delete=models.CASCADE,
+        verbose_name='peluquero',
+        on_delete=models.PROTECT,
         related_name='excepciones_horario',
     )
     # Dia concreto en el que se cambia el horario habitual.
-    fecha = models.DateField()
+    fecha = models.DateField(
+        verbose_name='fecha',
+    )
     # Las horas pueden quedar vacias cuando ese dia esta cerrado.
     hora_inicio = models.TimeField(
+        verbose_name='hora de inicio',
         null=True,
         blank=True,
     )
     hora_fin = models.TimeField(
+        verbose_name='hora de fin',
         null=True,
         blank=True,
     )
     # Indica si el peluquero no trabaja durante toda esa fecha.
-    cerrado = models.BooleanField(default=False)
+    cerrado = models.BooleanField(
+        verbose_name='cerrado',
+        default=False,
+    )
     # Permite explicar el motivo del cierre o del horario especial.
     motivo = models.CharField(
+        verbose_name='motivo',
         max_length=255,
         blank=True,
     )
@@ -318,48 +358,51 @@ class ExcepcionHorario(models.Model):
 
 # UD3.3.h: Representa una cita reservada por un cliente.
 class Reserva(models.Model):
-    # Define los cuatro estados posibles de una reserva. Se usa TextChoices
-    # porque un BooleanField solo permitiria dos opciones.
-    class Estado(models.TextChoices):
-        # El primer texto se guarda en la base de datos y el segundo es
-        # la etiqueta que se muestra en formularios y en el administrador.
-        PENDIENTE = 'pendiente', 'Pendiente'
-        CONFIRMADA = 'confirmada', 'Confirmada'
-        CANCELADA = 'cancelada', 'Cancelada'
-        COMPLETADA = 'completada', 'Completada'
-
     cliente = models.ForeignKey(
         'billing.Cliente',
-        on_delete=models.SET_NULL,
+        verbose_name='cliente',
+        on_delete=models.PROTECT,
         related_name='reservas',
         null=True,
     )
     peluquero = models.ForeignKey(
         Peluquero,
+        verbose_name='peluquero',
         on_delete=models.PROTECT,
         related_name='reservas',
     )
     servicios = models.ManyToManyField(
         Servicio,
+        verbose_name='servicios',
         related_name='reservas',
     )
-    fecha_inicio = models.DateTimeField()
-    fecha_fin = models.DateTimeField()
-    duracion_total_minutos = models.PositiveIntegerField()
+    fecha_inicio = models.DateTimeField(
+        verbose_name='fecha y hora de inicio',
+    )
+    fecha_fin = models.DateTimeField(
+        verbose_name='fecha y hora de fin',
+    )
+    duracion_total_minutos = models.PositiveIntegerField(
+        verbose_name='duración total en minutos',
+    )
     precio_total = models.DecimalField(
+        verbose_name='precio total',
         max_digits=10,
         decimal_places=2,
     )
-    # Guarda el estado como texto, pero solo permite las opciones de Estado.
-    estado = models.CharField(
-        # La opcion mas larga cabe dentro del limite de 20 caracteres.
-        max_length=20,
-        # Convierte la enumeracion en las opciones del campoentr.
-        choices=Estado.choices,
-        # Una reserva nueva empieza pendiente si no se indica otro estado.
-        default=Estado.PENDIENTE,
+    # Relaciona la reserva con uno de los estados definidos en common.
+    estado = models.ForeignKey(
+        EstadoReserva,
+        verbose_name='estado',
+        on_delete=models.PROTECT,
+        related_name='reservas',
+        db_column='estado',
+        default='pendiente',
     )
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField(
+        verbose_name='fecha de creación',
+        auto_now_add=True,
+    )
 
     class Meta:
         # UD3.4.e: Nombres del modelo.

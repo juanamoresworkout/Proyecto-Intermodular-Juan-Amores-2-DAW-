@@ -92,7 +92,7 @@ def peluquero_esta_libre(peluquero, fecha_inicio, fecha_fin) -> bool:
         fecha_fin__gt=fecha_inicio,
     ).exclude(
         # Las reservas canceladas ya no ocupan tiempo.
-        estado=Reserva.Estado.CANCELADA,
+        estado_id='cancelada',
     ).exists()
 
     # Si encuentra una reserva solapada, devuelve False; si no, True.
