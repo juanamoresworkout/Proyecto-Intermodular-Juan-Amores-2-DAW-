@@ -1,4 +1,4 @@
-# Autoevaluación de la UD3 Servidor
+# Autoevaluación de la UD3 y UD4 Servidor
 
 ## Proyecto
 
@@ -217,4 +217,47 @@ No se usarán comentarios genéricos ni copiados literalmente. El comentario deb
 | Código | Captura necesaria | Estado | Ubicación final |
 |---|---|---|---|
 | UD3.5.a | Listas del administrador de los nueve modelos actuales. | Disponibles; pendiente recibir la selección definitiva del alumno. | Documento Word final de actividades. |
+
+## UD4: revisión contrastada del 16/11/2026
+
+Fuente de puntuaciones: `.tmp/UD4 - Actividades SERVIDOR - Autoevaluación.odt`.
+Fuente de requisitos: `.tmp/UD4 - Actividades SERVIDOR (1).odt`.
+Teoría: PDF de UD4 del profesor, especialmente páginas 12–16 y 29–33.
+
+La [guía de estudio y revisión](docs/UD4_4_guia_estudio_y_revision.md) contiene el flujo explicado, la tabla de layouts, las propuestas de texto para los anexos y las incidencias reproducidas. Los ODT originales no se han rellenado. Las puntuaciones de abajo son el valor de cada tarea, no notas concedidas; la calificación queda sin asignar.
+
+| CE | Actividad | Tarea | Valor | Estado de revisión | Evidencia / pendiente |
+|---|---|---|---:|---|---|
+| RA5.h | UD4.1 | a | 10 | Necesita corrección | Hay comentarios explicativos, pero UD4.3 contiene letras d–i inexistentes y los layouts UD4.4.d/e solo están etiquetados como c. |
+| RA5.c | UD4.2 | b | 3 | Implementado y revisado | Rutas de creación, actualización y borrado para nueve modelos; GET de las 27 pantallas correcto. |
+| RA5.c | UD4.2 | c | 3 | Implementado y revisado | Plantilla compartida, títulos y enlace de borrado; pendiente general de CSRF señalado en UD4.4.b. |
+| RA5.c | UD4.2 | e | 2 | Implementado y revisado | Confirmación común y contexto del objeto; nueve GET correctos. |
+| RA5.c | UD4.2 | i | 2 | Corregido y comprobado | Nueve listados conservan asc/desc al avanzar y volver; 36 enlaces recorridos con asc, desc, sin parámetro y valor inválido. |
+| RA6.f | UD4.2 | a | 3,5 | Implementado; cierre parcial | 27 vistas, redirecciones revisadas; falta completar tabla 1 de core en el ODT y ampliar pruebas de guardado. |
+| RA6.f | UD4.2 | d | 1 | Implementado y revisado | CreateUpdateContextMixin comparte títulos y URL de borrado. |
+| RA6.f | UD4.2 | f | 2,5 | Implementado; evidencia previa | ProtectedDeleteMixin captura ProtectedError y usa el objeto en el aviso. Prueba protegida de cliente realizada anteriormente; no se repitió el POST en esta revisión. |
+| RA6.f | UD4.2 | g | 1 | Implementado; evidencia previa | CobroMixin suma los otros cobros y excluye el propio al editar. Pruebas de rechazo realizadas en el chat; no equivalen a garantía de concurrencia. |
+| RA6.f | UD4.2 | h | 2 | Implementado; documentación parcial | Compatibilidad y disponibilidad en ReservaMixin/services. Texto preparado en la guía; falta pasarlo al ODT. |
+| RA3.a, RA3.b, RA3.c, RA3.d | UD4.2 | a | 10 | Sin calificar | El enunciado deriva su nota de RA5.c y RA6.f. No se asigna una nota independiente. |
+| RA5.d, RA3.e, RA3.f | UD4.3 | a | 5 | Implementado con salvedades | Nueve ModelForm para nueve parejas; consultar cifra 16 del ODT y exclusión de campos derivados de Reserva. |
+| RA5.d, RA3.e, RA3.f | UD4.3 | b | 2 | Implementado; corregir etiqueta | Factura total > 0 y Cobro importe > 0. El comentario de Cobro usa c y debe corresponder a b. |
+| RA5.d, RA3.e, RA3.f | UD4.3 | c | 3 | Implementado; documentación pendiente | Precio de servicio, intervalo semanal y fecha de excepción. Día vacío corregido: crear/actualizar devuelve error de campo sin excepción. Falta transcribir explicación y corregir letras. |
+| RA8 | UD4.4 | a | 1 | Implementado; ajuste de interfaz pendiente | Dieciocho mensajes con objeto y destinos correctos. Ciclo crear/actualizar categoría con rollback y mensajes de éxito. Botón cerrar aviso usa atributos Bootstrap 4. |
+| RA8 | UD4.4 | b | 1 | Corregido y comprobado | Retirado el token explícito según el PDF. Las 18 pantallas contienen un único token generado por Crispy; POST sin token rechazado con 403. |
+| RA8 | UD4.4 | c | 1 | Implementado y revisado | Nueve constructores con helper/layout y form_tag=False. Campos completos y sin repetir en los layouts. |
+| RA8 | UD4.4 | d | 3 | Implementado; trazabilidad pendiente | Filas prescritas de billing coinciden; cliente añade teléfono/activo. Añadir código d y justificar Row/Column frente al ejemplo Div/Field. |
+| RA8 | UD4.4 | e | 4 | Implementado; entrega pendiente | Seis layouts core, mínimo cinco superado. Tabla transcrita en docs, pendiente trasladarla al anexo original y etiquetar e. |
+
+### Evidencias actuales y límites
+
+- Django check correcto, pip check correcto y sin nuevas migraciones por generar.
+- 36 GET correctos: 18 formularios, nueve confirmaciones y nueve listados.
+- Dieciocho configuraciones de URL y mensaje correctas; todos los campos de cada formulario están representados una vez en su layout.
+- Creación y actualización de una categoría temporal con CSRF forzado: 302 y aviso de éxito. POST sin token: 403. Transacción revertida y ausencia del registro comprobada.
+- Duplicación CSRF reproducida inicialmente y corregida posteriormente con autorización. Las 18 pantallas generan ahora un solo token; se mantiene la protección. Era incorrecto afirmar que form_tag=False impedía generar el token de Crispy.
+- `HorarioSemanalForm` activo sin día: corregido usando `dia_semana_id is None`. POST de creación y actualización: HTTP 200 con error `required`; día inexistente: `invalid_choice`; lunes 0 aceptado. Datos guardados sin cambios.
+- Paginación corregida: conserva únicamente asc/desc en ambos sentidos. Sigue pendiente el HTML de avisos, que conserva `data-dismiss` en vez de `data-bs-dismiss`.
+- No se han probado todos los caminos POST ni inspeccionado visualmente las 18 pantallas en navegador durante esta revisión. No se asigna 10/10 ni se declara terminada la entrega.
+
+La tabla del profesor contiene cinco tareas de UD4.4 (a–e), por valor total de 10 puntos. Los acuerdos de este chat sobre nueve formularios y campos derivados no sustituyen una confirmación del profesor. Las explicaciones originales del alumno y su comprensión también forman parte de las condiciones del enunciado.
 
