@@ -6,12 +6,13 @@
     {# Clases de Bootstrap para mostrar y centrar los controles. #}
     <ul class="pagination justify-content-center">
 
+        {# UD4.2.i: Los enlaces conservan ordering únicamente si vale asc o desc. #}
         {# Muestra el botón Anterior únicamente si existe una página previa. #}
         {% if page_obj.has_previous %}
             <li class="page-item">
                 <a
                     class="page-link"
-                    href="?page={{ page_obj.previous_page_number }}"
+                    href="?page={{ page_obj.previous_page_number }}{% if request.GET.ordering == 'asc' or request.GET.ordering == 'desc' %}&amp;ordering={{ request.GET.ordering }}{% endif %}"
                 >
                     Anterior
                 </a>
@@ -31,7 +32,7 @@
             <li class="page-item">
                 <a
                     class="page-link"
-                    href="?page={{ page_obj.next_page_number }}"
+                    href="?page={{ page_obj.next_page_number }}{% if request.GET.ordering == 'asc' or request.GET.ordering == 'desc' %}&amp;ordering={{ request.GET.ordering }}{% endif %}"
                 >
                     Siguiente
                 </a>

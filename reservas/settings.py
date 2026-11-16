@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # UD4.4.b: Activa Crispy Forms y sus plantillas para Bootstrap 5.
+    'crispy_forms',
+    'crispy_bootstrap5',
     # UD3.2.f: Registra las aplicaciones propias del proyecto.
     'common.apps.CommonConfig',
     'core.apps.CoreConfig',
@@ -141,3 +144,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+# UD4.4.b: Limita y selecciona Bootstrap 5 como paquete de renderizado.
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

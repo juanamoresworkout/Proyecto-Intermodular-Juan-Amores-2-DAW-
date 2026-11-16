@@ -1,4 +1,5 @@
 {% extends "common/base_intranet.html" %}
+{% load crispy_forms_tags %}
 
 {% block main_content %}
 <!-- UD4.2.c: Muestra el formulario común de creación y actualización. -->
@@ -11,12 +12,9 @@
     {% endif %}
 
     <!-- POST envía los datos al mismo CreateView o UpdateView. -->
-    <form method="post">
-        <!-- Protege el envío frente a peticiones externas falsificadas. -->
-        {% csrf_token %}
-
-        <!-- Django genera los campos indicados por fields; as_p los separa. -->
-        {{ form.as_p }}
+    <form method="post" novalidate>
+        <!-- UD4.4.b: Crispy aplica el helper y el layout e incluye el token CSRF. -->
+        {% crispy form %}
 
         <!-- El texto del botón refleja la operación que se ejecutará. -->
         {% if object %}

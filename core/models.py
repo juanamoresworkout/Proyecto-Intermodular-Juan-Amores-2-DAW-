@@ -163,8 +163,9 @@ class HorarioSemanal(models.Model):
         if (
             not self.activo
             or not self.peluquero_id
+            # UD4.3.c: Comprueba la clave sin acceder a una relación vacía.
             # El lunes vale 0, por eso se compara expresamente con None.
-            or self.dia_semana is None
+            or self.dia_semana_id is None
             or not self.hora_inicio
             or not self.hora_fin
             or self.hora_inicio >= self.hora_fin

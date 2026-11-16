@@ -9,11 +9,14 @@ from django.urls import reverse_lazy
 
 from common.mixins import (
     CreateUpdateContextMixin,
+    CreateUpdateSuccessMixin,
     DeleteContextMixin,
     OrderingMixin,
     ProtectedDeleteMixin,
 )
 
+# UD4.3: Los ModelForm centralizan campos y validaciones de ambas acciones.
+from .forms import ClienteForm, CobroForm, FacturaForm
 from .mixins import CobroMixin
 from .models import Cliente, Factura, Cobro
 
@@ -35,37 +38,37 @@ class ClienteDetailView(DetailView):
     template_name = 'billing/cliente_detail.html'
 
 # UD4.2.a: Permite crear clientes mediante el formulario generado por Django.
-class ClienteCreateView(CreateUpdateContextMixin,CreateView):
+class ClienteCreateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    CreateView,
+):
     model = Cliente
-    fields = [
-        'nombre',
-        'apellidos',
-        'nif',
-        'email',
-        'telefono',
-        'activo',
-    ]
+    # La vista delega la generación y validación en el ModelForm.
+    form_class = ClienteForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = 'Crear cliente'
     titulo_actualizacion = None
     url_borrado = None
+    success_url_name = 'cliente_update'
+    success_message = "Cliente '{object}' creado correctamente."
 
 
 # UD4.2.a: Permite modificar los datos de un cliente existente.
-class ClienteUpdateView(CreateUpdateContextMixin,UpdateView):
+class ClienteUpdateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    UpdateView,
+):
     model = Cliente
-    fields = [
-        'nombre',
-        'apellidos',
-        'nif',
-        'email',
-        'telefono',
-        'activo',
-    ]
+    # Reutiliza el mismo formulario para mantener idénticas reglas y campos.
+    form_class = ClienteForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = None
     titulo_actualizacion = 'Actualizar cliente'
     url_borrado = 'cliente_delete'
+    success_url_name = 'cliente_update'
+    success_message = "Cliente '{object}' actualizado correctamente."
 
 
 # UD4.2.a: Solicita confirmación antes de eliminar un cliente.
@@ -91,35 +94,37 @@ class FacturaDetailView(DetailView):
 
 
 # UD4.2.a: Permite crear facturas mediante el formulario generado por Django.
-class FacturaCreateView(CreateUpdateContextMixin, CreateView):
+class FacturaCreateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    CreateView,
+):
     model = Factura
-    fields = [
-        'cliente',
-        'numero',
-        'concepto',
-        'fecha',
-        'total',
-    ]
+    # FacturaForm impide guardar totales iguales o inferiores a cero.
+    form_class = FacturaForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = 'Crear factura'
     titulo_actualizacion = None
     url_borrado = None
+    success_url_name = 'factura_update'
+    success_message = "Factura '{object}' creada correctamente."
 
 
 # UD4.2.a: Permite modificar los datos de una factura existente.
-class FacturaUpdateView(CreateUpdateContextMixin, UpdateView):
+class FacturaUpdateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    UpdateView,
+):
     model = Factura
-    fields = [
-        'cliente',
-        'numero',
-        'concepto',
-        'fecha',
-        'total',
-    ]
+    # Reutiliza los mismos campos y la misma validación que la creación.
+    form_class = FacturaForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = None
     titulo_actualizacion = 'Actualizar factura'
     url_borrado = 'factura_delete'
+    success_url_name = 'factura_update'
+    success_message = "Factura '{object}' actualizada correctamente."
 
 
 # UD4.2.a: Solicita confirmación antes de eliminar una factura.
@@ -147,31 +152,39 @@ class CobroDetailView(DetailView):
 
 
 # UD4.2.a: Permite crear cobros mediante el formulario generado por Django.
-class CobroCreateView(CobroMixin, CreateUpdateContextMixin, CreateView):
+class CobroCreateView(
+    CobroMixin,
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    CreateView,
+):
     model = Cobro
-    fields = [
-        'factura',
-        'fecha',
-        'importe',
-    ]
+    # El formulario valida el importe y el mixin comprueba el acumulado.
+    form_class = CobroForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = 'Crear cobro'
     titulo_actualizacion = None
     url_borrado = None
+    success_url_name = 'cobro_update'
+    success_message = "Cobro '{object}' creado correctamente."
 
 
 # UD4.2.a: Permite modificar los datos de un cobro existente.
-class CobroUpdateView(CobroMixin, CreateUpdateContextMixin, UpdateView):
+class CobroUpdateView(
+    CobroMixin,
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    UpdateView,
+):
     model = Cobro
-    fields = [
-        'factura',
-        'fecha',
-        'importe',
-    ]
+    # Reutiliza las mismas dos capas de validación que la creación.
+    form_class = CobroForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = None
     titulo_actualizacion = 'Actualizar cobro'
     url_borrado = 'cobro_delete'
+    success_url_name = 'cobro_update'
+    success_message = "Cobro '{object}' actualizado correctamente."
 
 
 # UD4.2.a: Solicita confirmación antes de eliminar un cobro.

@@ -9,11 +9,20 @@ from django.urls import reverse_lazy
 
 from common.mixins import (
     CreateUpdateContextMixin,
+    CreateUpdateSuccessMixin,
     DeleteContextMixin,
     OrderingMixin,
     ProtectedDeleteMixin,
 )
 
+from .forms import (
+    CategoriaServicioForm,
+    ExcepcionHorarioForm,
+    HorarioSemanalForm,
+    PeluqueroForm,
+    ReservaForm,
+    ServicioForm,
+)
 from .mixins import ReservaMixin
 from .models import (
     CategoriaServicio,
@@ -43,29 +52,35 @@ class CategoriaServicioDetailView(DetailView):
 
 
 # UD4.2.a: Permite crear categorías mediante el formulario generado por Django.
-class CategoriaServicioCreateView(CreateUpdateContextMixin, CreateView):
+class CategoriaServicioCreateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    CreateView,
+):
     model = CategoriaServicio
-    fields = [
-        'nombre',
-        'descripcion',
-    ]
+    form_class = CategoriaServicioForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = 'Crear categoría de servicio'
     titulo_actualizacion = None
     url_borrado = None
+    success_url_name = 'categoria_servicio_update'
+    success_message = "Categoría '{object}' creada correctamente."
 
 
 # UD4.2.a: Permite modificar una categoría existente.
-class CategoriaServicioUpdateView(CreateUpdateContextMixin, UpdateView):
+class CategoriaServicioUpdateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    UpdateView,
+):
     model = CategoriaServicio
-    fields = [
-        'nombre',
-        'descripcion',
-    ]
+    form_class = CategoriaServicioForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = None
     titulo_actualizacion = 'Actualizar categoría de servicio'
     url_borrado = 'categoria_servicio_delete'
+    success_url_name = 'categoria_servicio_update'
+    success_message = "Categoría '{object}' actualizada correctamente."
 
 
 # UD4.2.a: Solicita confirmación antes de eliminar una categoría.
@@ -97,37 +112,35 @@ class ServicioDetailView(DetailView):
 
 
 # UD4.2.a: Permite crear servicios mediante el formulario generado por Django.
-class ServicioCreateView(CreateUpdateContextMixin, CreateView):
+class ServicioCreateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    CreateView,
+):
     model = Servicio
-    fields = [
-        'categoria',
-        'nombre',
-        'descripcion',
-        'duracion_minutos',
-        'precio',
-        'activo',
-    ]
+    form_class = ServicioForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = 'Crear servicio'
     titulo_actualizacion = None
     url_borrado = None
+    success_url_name = 'servicio_update'
+    success_message = "Servicio '{object}' creado correctamente."
 
 
 # UD4.2.a: Permite modificar un servicio existente.
-class ServicioUpdateView(CreateUpdateContextMixin, UpdateView):
+class ServicioUpdateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    UpdateView,
+):
     model = Servicio
-    fields = [
-        'categoria',
-        'nombre',
-        'descripcion',
-        'duracion_minutos',
-        'precio',
-        'activo',
-    ]
+    form_class = ServicioForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = None
     titulo_actualizacion = 'Actualizar servicio'
     url_borrado = 'servicio_delete'
+    success_url_name = 'servicio_update'
+    success_message = "Servicio '{object}' actualizado correctamente."
 
 
 # UD4.2.a: Solicita confirmación antes de eliminar un servicio.
@@ -155,37 +168,35 @@ class PeluqueroDetailView(DetailView):
 
 
 # UD4.2.a: Permite crear peluqueros mediante el formulario generado por Django.
-class PeluqueroCreateView(CreateUpdateContextMixin, CreateView):
+class PeluqueroCreateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    CreateView,
+):
     model = Peluquero
-    fields = [
-        'nombre',
-        'apellidos',
-        'email',
-        'telefono',
-        'servicios',
-        'activo',
-    ]
+    form_class = PeluqueroForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = 'Crear peluquero'
     titulo_actualizacion = None
     url_borrado = None
+    success_url_name = 'peluquero_update'
+    success_message = "Peluquero '{object}' creado correctamente."
 
 
 # UD4.2.a: Permite modificar los datos de un peluquero existente.
-class PeluqueroUpdateView(CreateUpdateContextMixin, UpdateView):
+class PeluqueroUpdateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    UpdateView,
+):
     model = Peluquero
-    fields = [
-        'nombre',
-        'apellidos',
-        'email',
-        'telefono',
-        'servicios',
-        'activo',
-    ]
+    form_class = PeluqueroForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = None
     titulo_actualizacion = 'Actualizar peluquero'
     url_borrado = 'peluquero_delete'
+    success_url_name = 'peluquero_update'
+    success_message = "Peluquero '{object}' actualizado correctamente."
 
 
 # UD4.2.a: Solicita confirmación antes de eliminar un peluquero.
@@ -214,35 +225,35 @@ class HorarioSemanalDetailView(DetailView):
 
 
 # UD4.2.a: Permite crear horarios semanales mediante el formulario de Django.
-class HorarioSemanalCreateView(CreateUpdateContextMixin, CreateView):
+class HorarioSemanalCreateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    CreateView,
+):
     model = HorarioSemanal
-    fields = [
-        'peluquero',
-        'dia_semana',
-        'hora_inicio',
-        'hora_fin',
-        'activo',
-    ]
+    form_class = HorarioSemanalForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = 'Crear horario semanal'
     titulo_actualizacion = None
     url_borrado = None
+    success_url_name = 'horario_semanal_update'
+    success_message = "Horario '{object}' creado correctamente."
 
 
 # UD4.2.a: Permite modificar un horario semanal existente.
-class HorarioSemanalUpdateView(CreateUpdateContextMixin, UpdateView):
+class HorarioSemanalUpdateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    UpdateView,
+):
     model = HorarioSemanal
-    fields = [
-        'peluquero',
-        'dia_semana',
-        'hora_inicio',
-        'hora_fin',
-        'activo',
-    ]
+    form_class = HorarioSemanalForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = None
     titulo_actualizacion = 'Actualizar horario semanal'
     url_borrado = 'horario_semanal_delete'
+    success_url_name = 'horario_semanal_update'
+    success_message = "Horario '{object}' actualizado correctamente."
 
 
 # UD4.2.a: Solicita confirmación antes de eliminar un horario semanal.
@@ -275,37 +286,35 @@ class ExcepcionHorarioDetailView(DetailView):
 
 
 # UD4.2.a: Permite crear excepciones de horario con el formulario de Django.
-class ExcepcionHorarioCreateView(CreateUpdateContextMixin, CreateView):
+class ExcepcionHorarioCreateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    CreateView,
+):
     model = ExcepcionHorario
-    fields = [
-        'peluquero',
-        'fecha',
-        'hora_inicio',
-        'hora_fin',
-        'cerrado',
-        'motivo',
-    ]
+    form_class = ExcepcionHorarioForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = 'Crear excepción de horario'
     titulo_actualizacion = None
     url_borrado = None
+    success_url_name = 'excepcion_horario_update'
+    success_message = "Excepción '{object}' creada correctamente."
 
 
 # UD4.2.a: Permite modificar una excepción de horario existente.
-class ExcepcionHorarioUpdateView(CreateUpdateContextMixin, UpdateView):
+class ExcepcionHorarioUpdateView(
+    CreateUpdateSuccessMixin,
+    CreateUpdateContextMixin,
+    UpdateView,
+):
     model = ExcepcionHorario
-    fields = [
-        'peluquero',
-        'fecha',
-        'hora_inicio',
-        'hora_fin',
-        'cerrado',
-        'motivo',
-    ]
+    form_class = ExcepcionHorarioForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = None
     titulo_actualizacion = 'Actualizar excepción de horario'
     url_borrado = 'excepcion_horario_delete'
+    success_url_name = 'excepcion_horario_update'
+    success_message = "Excepción '{object}' actualizada correctamente."
 
 
 # UD4.2.a: Solicita confirmación antes de eliminar una excepción de horario.
@@ -339,41 +348,35 @@ class ReservaDetailView(DetailView):
 # UD4.2.a: Crea reservas solicitando únicamente los datos elegidos por el usuario.
 class ReservaCreateView(
     ReservaMixin,
+    CreateUpdateSuccessMixin,
     CreateUpdateContextMixin,
     CreateView,
 ):
     model = Reserva
-    fields = [
-        'cliente',
-        'peluquero',
-        'servicios',
-        'fecha_inicio',
-        'estado',
-    ]
+    form_class = ReservaForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = 'Crear reserva'
     titulo_actualizacion = None
     url_borrado = None
+    success_url_name = 'reserva_update'
+    success_message = "Reserva '{object}' creada correctamente."
 
 
 # UD4.2.a: Actualiza una reserva y vuelve a calcular sus valores derivados.
 class ReservaUpdateView(
     ReservaMixin,
+    CreateUpdateSuccessMixin,
     CreateUpdateContextMixin,
     UpdateView,
 ):
     model = Reserva
-    fields = [
-        'cliente',
-        'peluquero',
-        'servicios',
-        'fecha_inicio',
-        'estado',
-    ]
+    form_class = ReservaForm
     template_name = 'common/base_create_update.html'
     titulo_creacion = None
     titulo_actualizacion = 'Actualizar reserva'
     url_borrado = 'reserva_delete'
+    success_url_name = 'reserva_update'
+    success_message = "Reserva '{object}' actualizada correctamente."
 
 
 # UD4.2.a: Solicita confirmación antes de eliminar una reserva.

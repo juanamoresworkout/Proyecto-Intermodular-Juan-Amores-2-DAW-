@@ -1,18 +1,8 @@
 # messages muestra el rechazo de la operación mediante un aviso rojo.
 from django.contrib import messages
-# reverse_lazy construye la URL cuando Django ya ha cargado sus rutas.
-from django.urls import reverse_lazy
-
 
 # UD4.2.g: Evita que los cobros superen el total de su factura.
 class CobroMixin:
-    def get_success_url(self):
-        # Tras guardar vuelve a editar exactamente el cobro creado o actualizado.
-        return reverse_lazy(
-            'cobro_update',
-            kwargs={'pk': self.object.pk},
-        )
-
     def form_valid(self, form):
         # form.instance contiene el cobro validado, todavía pendiente de guardar.
         factura = form.instance.factura

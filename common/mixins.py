@@ -1,9 +1,13 @@
 # messages permite crear avisos que se muestran en la siguiente plantilla.
 from django.contrib import messages
+# SuccessMessageMixin conserva el aviso hasta cargar la página de destino.
+from django.contrib.messages.views import SuccessMessageMixin
 # ProtectedError identifica exclusivamente un borrado bloqueado por PROTECT.
 from django.db.models.deletion import ProtectedError
 # HttpResponseRedirect envía al navegador a la URL indicada tras el intento.
 from django.http import HttpResponseRedirect
+# reverse_lazy transforma el nombre de una ruta en su dirección final.
+from django.urls import reverse_lazy
 
 
 # UD4.2.d: Comparte con la plantilla los textos y la URL de borrado.
@@ -22,6 +26,26 @@ class CreateUpdateContextMixin:
         context['url_borrado'] = self.url_borrado
         # Devuelve el contexto ampliado para que Django renderice la plantilla.
         return context
+
+
+# UD4.4.a: Muestra un mensaje dinámico y vuelve al objeto guardado.
+class CreateUpdateSuccessMixin(SuccessMessageMixin):
+    # Cada vista concreta indica su ruta de actualización y el texto adecuado.
+    success_url_name = None
+    success_message = None
+
+    def get_success_url(self):
+        # self.object es el objeto que CreateView o UpdateView acaba de guardar.
+        return reverse_lazy(
+            self.success_url_name,
+            kwargs={'pk': self.object.pk},
+        )
+
+    def get_success_message(self, cleaned_data):
+        # Inserta la representación textual real dentro del mensaje de la vista.
+        return self.success_message.format(
+            object=self.object,
+        )
 
 
 # UD4.2.e: Comparte con la plantilla los textos de confirmación de borrado.
